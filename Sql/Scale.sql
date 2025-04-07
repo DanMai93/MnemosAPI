@@ -1,0 +1,9 @@
+INSERT INTO scale (ID, NAME) VALUES (1, 'Languages');
+INSERT INTO scale (ID, NAME) VALUES (2, 'Libraries');
+INSERT INTO scale (ID, NAME) VALUES (3, 'DB');
+INSERT INTO scale (ID, NAME) VALUES (4, 'Cloud');
+INSERT INTO scale (ID, NAME) VALUES (5, 'GenericTech');
+INSERT INTO scale (ID, NAME) VALUES (6, 'Pattern');
+INSERT INTO scale (ID, NAME) VALUES (7, 'PM');
+INSERT INTO scale (ID, NAME) VALUES (8, 'SoftSkill');
+INSERT INTO scale (ID, NAME) VALUES (9, 'SpokenLanguages');

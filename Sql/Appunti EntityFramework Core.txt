@@ -1,0 +1,586 @@
+EntityFramework Core è un Object Relational Mapper (ORM) con una libreria di API che 
+facilita le interazioni con i database.
+
+Accresce la produttività eliminando la ripetitività del codice pur consentendo una connessione con 
+più data store. 
+È utilizzato largamente per gestire in modo stabile e super performante applicazioni ad alto carico
+di prestazioni.
+
+EF Core utilizza LINQ per comunicare e manipolare i database associati al codice statico (C#) 
+del compilatore.
+
+EF Core nasce nel 2016.
+
+Benefici: utilizza la sintassi nativa di C#, ha un'alta velocità di scrittura e continuo supporto di 
+aggiornamenti, permette le migrazioni e l'update dei database, permette di creare API sia in approccio
+CodeFirst sia DBFirst, consente il supporto di più database, è opensource, è ad alta testabilità.
+
+Cosa sono i DATA MODELS:
+Classi utlizzate per modellare l'aspetto delle varie tabelle. Qualsiasi proprietà inserita nella classe 
+risulterà come una colonna all'interno della rispettiva tabella nel database di destinazione generato 
+(sia manualmente in approccio DBFirst sia automaticamente con approccio CodeFirst).
+
+Quando si genera una proprietà di tipo intero nel data model (che sia un ID o altro) EF Core genererà 
+automaticamente una chiave primaria per la tabella.
+
+IL DBCONTEXT:
+è il luogo dove sono delineate le tabelle e gli oggetti presenti nel database che si vogliono
+manipolare all'interno del codice nativo. Dispone dei metodi sovrascrivibil per la configurazione e la 
+creazione del database e il salvataggio delle modifiche. 
+È una classe standard che si ottiene tramite EFCore per mutare le classi C# in classi che rappresentino
+il database. Al suo interno i modelli delineati vengono mappati in tabelle reali con conseguente accesso a
+determinati metodi.
+
+All'interno del DBCONTEXT viene passata la ConnectionString che permette la comunicazione costante tra 
+il programma e i/il corrispettivi/o database associati/o.
+La ConnectionString è utilizzata generalmente per comunicare al codice quale database associare, il suo nome,
+la sua posizione, eventuali criptaggi, ecc ecc... È sconsigliato configurarla manualmente in OnConfiguring.
+Può essere settata nel file Program.cs e nei setup dell'IoC (Inversion of Control) per azionarsi all'avvio 
+dell'applicazione. DEVE ESSERE SEMPRE SECRETATA onde evitare eventuali hacking.
+Vanno inseriti anche l'elenco dei DBSET, ovvero la rappresentazione delle classi come tabelle nel database.
+Per ogni tabella da inserire va comunicata nel DBCONTEXT il corrispettivo DBSET.
+
+SUPPORTO DATABASE di EFCore:
+non tutti i provider sono compatibli con EFCore, ma la maggior parte è ampiamente supportata.
+A seconda del provider è necessario aggiungere i giusti pacchetti di supporto per VisualStudio o 
+VisualStudioCode, a senconda di quale usiamo. 
+
+LE MIGRATIONS:
+le MIGRATIONS sono uno dei fondamenti dello sviluppo CodeFirst dei database. Servono a tenere traccia di 
+ogni modifica apportata al database in modo da sapere chi, come e quando ha apportato la modifica.
+Le MIGRATIONS consentono di effettuare dei backup manuali per i/il database.
+Ogni migrazione generea uno snapshot del vecchio database specificando le modifiche apportate passo dopo 
+passo. Ogni applicazione delle MIGRATIONS al database viene registrata sullo stesso in una tabella generata 
+automaticamente.
+
+-> AGGIUNGERE UNA MIGRATION: 
+1) apirire la console di gestione dei pacchetti NuGet;
+2) impostare il progetto predefinito;
+3) inserire il comando "Add-Migration *nome migrazione" (per convenzione la prima avrà nome Initial);
+4) avviare il comando;
+Se si utlizza la riga di comando del terminale bisognerà immettere la stringa:
+"dotnet ef migrations add *NomeMigrazione*" seguito da "--startup project ./*contesto di derivazione*"
+ e avviare il comando.
+
+N.B.: ERRORE NELLA MIGRATION di EFCore 9.0!!!
+Ad inizion anno 2025, con il rilascio di EFCore 9.0, il lancio delle migrazioni generava una eccezione 
+nel caso in cui fossero presenti delle modifice pendenti non incapsulate il cui messaggio recita(va): 
+"Il modello del context'DbContext' ha delle modifiche pendenti. Aggiungi una nuova migrazione prima di 
+aggiornare il database."
+SCENARIO: Il model si presenta senza modifiche ma EFCore segnala cambiamenti dovuti a fattori 
+non-determinati, come l'uso di metodi(o seeding) "new DateTime()", "DateTime.Now", "DateTime.UtcNow" o 
+"Guid.NewGuid()" in "HasData()".
+SOLUZIONE: Creare una nuova migrazione e controllare il contenuto per determinare la causa. Sostituire i 
+dati dinamici con dati statici codificati nel model. Ad esempio si può utilizzare un valore "SetDate" al 
+posto di "DateTime.Now". Dopo aver apportato queste modifiche, ricreare la migrazione. Se i dati dinamici 
+sono essenziali per il seeding, provare con pattern alternativi al posto di "HasData()".
+
+CREARE IL DATABASE (CodeFirst):
+per creare il database relativo al programma con approccio CodeFirst è sufficiente aprire la console dei 
+pacchetti NuGet e digitare il comando "Update-Database".
+Con la riga di comando del terminale si procede con il comando "dotnet ef update database" seguito dalla 
+stessa coda utilizzata per la migrazione ("--startup project ./*contesto di derivazione*").
+
+In genere l'approccio utilizzato più frequentemente è quello DBFirst MA può rivelarsi scomdo nel momento 
+in cui l'applicazione che abbiamo generato dal DB subisce cambiamenti essenziali i quali rendono difficile
+andare a modificare la struttura di partenza del database da cui deriva.
+
+
+APPROCCIO DBFirst:
+Con l'approccio DBFirst, una volta creato il database con le rispettive tabelle si procede a creare la 
+soluzione su VS (o VSCode) per eseguire le operazioni di SCUFFOLDING.
+Lo SCUFFOLDING consente di trasferire i dati dal database al software di scrittura codice generando 
+automaticamente le classi e i modelli che andranno poi a costituire il programma.
+Si possono generare tramite SCUFFOLDING anche i controller delle varie classi con i rispettivi metodi per 
+le operazioni CRUD.
+
+SCUFFOLDING con Console Pacchetti NuGet:
+si inserisce il comando "Scaffold-DbContext '*connection string*' Microsoft.EntityFrameworkCore.SqlServer
+
+Per generare gli elementi singolarmente è sufficiente accedere all'opzione "Aggiungi" con il tasto destro 
+del mouse nella finestra di esplorazione soluzioni e selezionare "Nuovo elemento di scuffolding" scegliendo 
+poi la tipologia di elemento da generare.
+
+-> Nel terminale: inserire il comando
+"dotnet ef dbcontext scaffold '*connection string*' Microsoft.EntityFrameworkCore.SqlServer
+--context dir ScaffoldDbContext --output-dir ScaffoldModels --startup-project ./
+--project ..\EntityFrameworkCore.Data\"
+
+Nel momento in cui vengono eseguite importanti e massicce modifiche al database di partenza lo SCUFFOLDING 
+deve essere eseguito nuovamente ogni qual volta si riveli necessario.
+
+
+DATA SEEDING NEL DATABASE:
+applicare il seeding ad un database equivale ad applicare le migrazioni. Se si hanno tabelle che richiedono 
+dei valori predefiniti si può scrivere il codice in modo tale che, una volta eseguito l'aggiornamento del 
+database si potranno visualizzare tutte le migrazioni che inseriranno effettivamente quei valori predefiniti.
+
+Il DATA SEEDING va eseguito a mano nel DBCONTEXT sotto la chiamata ad un metodo "OnModelCreating" che ha come 
+parametri l'oggetto modelBuilder di tipo ModelBuilder. Si dichiara poi la chiamata al ModelBuilder richiamando 
+l'entita specificandone il metodo base tra parentesi angolari (<>) e specificando il suo avere dati *HasData()*.
+Si dichiara poi l'aggiunta di una nuova riga e all'interno delle graffe ({}) si dichiarano le proprietà con i 
+rispettivi valori.
+
+N.B.: in questo tipo di approccio si ha il COMPLETO CONTROLLO sulle PrimaryKey delle tabelle e vanno inserite 
+manualmente.
+
+ES:
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<Team>().HasData(
+				new Team
+				{
+					TeamId = 1,
+					Name = "Tivoli Gardens FC",
+					CreatedDate = DateTimeOffset.UtcNow.DateTime
+				}
+				);
+		}
+
+L'azione si può ripetere tante volte quante le righe da inserire nel database (ovviamente modificando 
+sequenzialmente i parametri di ID e il NAME del record inserito precedentemente per non incorrere in eccezioni 
+o eventuali errori di sorta.
+
+Una volta inseriti i nostri RECORD nel DBCONTEXT si procede alla migrazione come visto precedentemente.
+
+QUANDO SI HANNO PIÙ DBCONTEXT È NECESSARIO SPECIFICARE NELLA CONSOLE DI GESTIONE NUGET A QUALE STIAMO INVIANDO 
+IL SEEDING.
+
+Si procede quindi al comando "Add-Migration *nome migrazione* -Context *NomeDelContext*"
+Stesso procedimento ed accortezze per l'esecuzione tramite riga di comando del terminale.
+
+Consequenzialmente all'aggiornamento del DbContext dobbiamo eseguire l'Update-Database specificando il context da
+utilizzare per l'aggiornamento:
+
+"Update-Database -Context *NomeDelContext*"
+
+
+                                        -- SINTASSI LINQ --
+										
+AGGIUNGERE IL LOGGING al EFCore WORKLOAD:
+
+All'interno del DbContext si inserisce all'interno di un metodo OnConfiguring(DbContextOptionsBuilder optionBuilder)
+un oggetto optionBuilder per il logTo per la registrazione.
+
+-- NOTARE che l'aggiunta di una registrazione sensibile È RISCHIOSA poiché potrebbe fornire accesso a dati sensibili a 
+terzi --
+
+Il codice si presenta così: 
+
+	protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
+	{
+		// Using SQL Server
+		//optionBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB; Initial
+		  Catalog=FootballLeague_EFCore; Encrypt=False");
+		  
+		optionBuilder.UseSqlite($"Data Source=FootballLeague_EFCore.db")
+			.LogTo(Console.WriteLine, LogLevel.Information)
+			.EnableSensitiveDataLogging()
+			.EnableDatailedErrors();
+	}
+
+IN FASE DI PRODUZIONE NON ABILITARE MAI E POI MAI LA REGISTRAZIONE DI DATI POTENZIALMENTE SENSIBLI.
+
+[ FIX UTILE ]: quando si effettua l'update del database viene creato automaticamente un file .db nella cartella delle 
+"Dependencies" che verrà cercata invano dall'applicazione una volta lanciata. Per correggere questo errore (specialmente 
+utlizzando SQLite) è sufficiente inserire l'origine dati come nome del database. 
+Per un fix più efficace si può mettere il file in un percorso predefinito nel pc.
+Il codice risultante sarà:
+
+	public NomeDelDbContext()
+	{
+		var folder = Enviroment.SpecialFolder.LocalApplicationData;
+		var path = Enviroment.GetFolderPath(folder);
+		DbPath = Path.Combine(path, "NomeDelFileDb.db");
+	}
+	
+	public string DbPath {get; private set;}
+	
+	protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
+	{
+		// Using SQL Server
+		//optionBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB; Initial
+		  Catalog=FootballLeague_EFCore; Encrypt=False");
+		  
+		optionBuilder.UseSqlite($"Data Source={DbPath}")
+			.LogTo(Console.WriteLine, LogLevel.Information)
+			.EnableSensitiveDataLogging()
+			.EnableDatailedErrors();
+	}
+	
+
+SINTASSI LINQ: LINQ è l'acronimo di Language INtegrated Query e permette l'interrogazione del database direttamente dal 
+codice nativo C# che traduce simultaneamente le righe di codice in query per l'esecuzione sul db.
+Può altresì essere usato per operazioni non inerenti al database come le liste e le collezioni.
+Nel LINQ troviamo spesso l'utilizzo di espressioni LAMBDA.
+
+ES: // Sintassi Query
+	var qNames = from name in listOfNames where name.Length <= 8 select name;
+	// Sintassi del metodo
+	var mNames = listOfNames.Where(name => name.Lenght <= 8);
+	
+Per eseguire una QUERY nel codice C# si procede al creare un collegamento al db nel file Program.cs dell'applicazione.
+Si istanzia il context al suo interno richiamandolo tramite la using appropriata (using EntityFrameworkCore.Data;) 
+e istanziando una variabile context corrispondente ad un nuovo collegamento al DbContext presente che vogliamo interrogare(il dbcontext altro non è che un riflesso del DataBase nel codice del programma).
+
+	var context = new NomeDelDbContext();
+	
+Mentre su SQL la query da inserire è "SELECT * FROM tabella" in C# la SELECT sarà istanziata con una chiamata al metodo di esecuzione (execution method) ToList() che permette di ottenere una lista/raccolta su cui è più semplice lavorare e manipolare i dati. Successivamente si cicla la richiesta al db con un foreach per stampare i risultati desiderati(in questo caso l'elenco dei nomi delle squadre):
+
+	var teams = context.Teams.ToList();
+	
+	foreach (var team in teams)
+	{
+		Console.WriteLine(team.Name); --> Name è di fatto la colonna della tabella che desideriamo 			  	visualizzare,corrispondente al nome della proprietà della classe Team del modello creato a inizio progetto.
+	}
+	
+
+SINTASSI SINCRONA E ASINCRONA:
+la programmazione tradizionale SINCRONA fa sì che qualasiasi metodo e azione richiesta al programma debba terminare la propria esecuzione prima di passare al processo successivo, bloccando di fatto tutte le altre esecuzioni in corso finché
+i cambiamenti non vengono salvati.
+
+Programmando in modo ASINCRONO si previene questo blocco del processo in corso, poiché i metodi ASYNC sono meno dispendiosi e consentono l'esecuzione simultanea di più azioni e processi. Utilizzando la chiave AWAIT sulle operazioni asincrone si avrà modo di non interrompere l'attività lasciando la gestione ad EFCore.
+
+La libreria "Microsoft.EntityFrameworkCore;" consente di implementare i metodi Async.
+
+Per selezionare un record specifico da una tabella del database la query da immettere è la seguente:
+
+	var team = context.Teams.First();
+	
+	in modo asincrono: 
+	var team = await context.Teams.FirstAsync();
+	
+Questa query restituirà la prima riga della tabella.
+
+Se vogliamo imporre una ulteriore condizione si implementa una espressione LAMBDA alla funzione precedente:
+
+	var teamTwo = await context.Teams.FirstAsync(team => team.TeamId == 1);
+	
+Questa espressione LAMBDA fornirà la condizione specifica e restituirà il primo record utile che avrà "1" come ID.
+
+Se si desidera recuperare un record solitario dalla sua tabella si utlizza SingleAsync(), se si desidera trovare dei record che rispettino un parametro di ricerca si utilizza FindAsync();
+
+I metodi di ricerca Async hanno una variante -OrDefault che permette, qualora non ci sia risposta positiva nel recupero dei record dalle tabelle selezionate, di restituire un valore di default evitando così di incorrere in eccezioni magari non gestite dal codice che abbiamo scritto.
+
+
+FILTRARE LE QUERY:
+Per filtrare le risposte che l'esecuzione delle query restituisce si utilizza il predicato WHERE.
+"WHERE" consente di filtrare e concentrare la ricerca di record ad un campo più ristretto a seconda del filtro che aggiungiamo al predicato. Il predicato è di fatto un altro modo per intendere una espressione LAMBDA.
+
+ESEMPIO: 
+			var teamsFiltered = await context.Teams.Where(q => q.Name == "Tivoli Gardens F.C.")
+				.ToList();
+			foreach(var item in teamsFiltered)
+			{
+				Console.WriteLine(item.Name);
+			}
+
+
+Un metodo più efficace è quello di assegnare un Task al programma in modo da ricercare il record tramite un input esterno. ESEMPIO:
+
+			await GetFilteredTeams();
+			
+			async Task GetFilteredTeams()
+			{
+				Console.WriteLine("Enter desired Team");
+				var desiredTeam = Console.ReadLine();
+				
+				var teamsFiltered = await context.Teams.Where(q => q.Name == desiredTeam)
+					.ToList();
+				
+				foreach (var item in teamsFiltered)
+				{
+					Console.WriteLine(item.Name);
+				}
+			}
+
+
+Per raggruppare e aggregare i risultati si utilizza l'espressione LINQ seguente:
+
+	var groupedTeams = context.Teams
+		.GroupBy(q. => new {q.CreatedDate.Date, q.Name, q.ColonnaX});
+		
+	foreach (var group in groupedTeams)
+	{
+		Console.WriteLine(group.Key); "KEY" è la proprietà restituita, ovvero la DATA
+		foreach (var team in group)
+		{
+			Console.WriteLine(team.Name);
+		}
+	}
+	
+	async Task AggregateMethods()
+	{
+		var numberOfTeams = await context.Teams.CountAsync();
+		Console.WriteLine($"Number of Teams: {numberOfTeams}");
+		
+		var numberOfTeamsWithCondition = await context.Teams.CountAsync(q => q.TeamId == 1);
+		Console.WriteLine($"Number of Teams with condition above: {numberOfTeamsWithCondition}");
+	}
+
+NOTA: se si aggiunge la clausola WHERE prima di GroupBy essa manterrà la classica funzione WHERE. Qualora la clausola WHERE si trovasse SUCCESSIVAMENTE all'espressione di filtro GroupBy, avrà la stessa funzione della clausola SQL "HAVING".
+
+ORDER BY: 
+serve a specificare l'ordine in cui viene restituita la risposta della query al suo lancio.
+
+ESEMPIO:
+	
+	var orderedTeams = await context.Teams
+		.OrderBy(q => q.Name)
+		.ToListAsync();
+	
+	foreach (var item in orderedTeams)
+	{
+		Console.WriteLine(item.Name);
+	}
+	
+	var descOrderedTeams = await context.Teams
+		.OrderByDescending(q => q.Name)
+		.ToListAsync();
+		
+	foreach (var item in descOrderedTeams)
+	{
+		Console.WriteLine(item.Name);
+	}
+
+TRACKING & NO TRACKING:
+EFCore tiene traccia degli oggetti che vengono restituiti dalle quer. È meno utile quando si utilizzano applicazioni come le API e le Web App poiché essendo delle applicazioni disconnesse ricevono i dati restituiti da un endopoint differente rispetto a quello che li modifica.
+
+Essenzialmente EFCore registra e tiene conto delle varie modifiche apportate ai record che sono stati restituiti in precedenza.
+Il TRACKING però rallenta l'applicazione ed è utlie poter scegliere quando non eseguirlo per poter avere un'esecuzione più fluida.
+EFCore dispone quindi del metodo "AsNoTracking()" che specifica alla query LINQ che NON VOGLIAMO che si tenga traccia di quella query specifica.
+
+Per applicare di default il NoTracking si può inserire nel DbContext, all'interno dell'optionsBuilder dove viene specificato il percorso della ConnectionString, il metodo "UseQueryTrackingBehavior" specificando di non voler tracciare le eventuali modifiche:
+
+	optionBuilder.UseSqlite($"Data Source=FootballLeague_EFCore.db")
+			.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+			.LogTo(Console.WriteLine, LogLevel.Information)
+			.EnableSensitiveDataLogging()
+			.EnableDatailedErrors();	
+			
+Una volta applicato globalmente a tutta la soluzione, si può comunque aggiungere il tracking singolarmente qualora possa risultare utile per tenere traccia di specifiche modifiche.
+
+
+IQUERYABLES & LISTS:
+i dati di tipo LIST sono più semplici da utlizzare quando si tratta di codice nudo C#. Al contrario i dati di tipo IQueryable sono più indicati quando si comunica con i database e alla lunga possono portare una maggiore efficienza delle query.
+
+Quando eseguiamo un ToListAsync, i record sono caricati nella memoria del programma e ogni operazione eseguita in seguito considera l'elenco già presente in essa.
+I record rimangono come IQueryable finché non viene eseguito un ToListAsync che performa la query.
+
+ESEMPIO:
+ToList --->   teamsAsList = await context.Teams.ToListAsync();
+			  if(option == 1)
+			  {
+				teamsAsList = teamsAsList.Where(q => q.TeamId == 1).ToList();
+			  }
+			  else if(option == 2)
+			  {
+				teamsAsList = teamsAsList.Where(q => q.Name.Contains("F.C."))ToList();
+	          }
+			  foreach (var t in teamsAsList)
+			  {
+				 Console.WriteLine(t.Name);
+			  }
+
+IQueryable --> var teamsAsQueryable = context.Teams.AsQueryable();
+			   if (option == 1)
+			   {
+					teamsAsQueryable = teamsAsQueryable.Where(team => team.TeamId == 1);
+			   }
+			   else if (option == 2)
+			   {
+					teamsAsQueryable = teamsAsQueryable.Where(team => team.Name.Contains("F.C."));
+			   }
+			   
+			   teamsAsList = await teamsAsQueryable.ToListAsync();
+			   foreach (var t in teamsAsList)
+			   {
+					Console.WriteLine(t.Name);
+			   }
+			   
+Il procedimento ToListAsync() prenderà in memoria TUTTI gli elementi della tabella indicata e poi restituira l'elenco a seconda dell'opzione scelta.
+Il procedimento IQueryable invece filtrerà direttamente su database i dati in modo da restituire risultati maggiormente filtrati occupando meno spazio e alleggerendo il programma.
+
+Una volta ottenuti i risultati si possono convertire i risultati IQueryable in liste per ottenere un elenco più efficace da manipolare.
+
+
+
+TIPS PER QUERY EFFICIENTI:
+
+1)Utilizzare in modo oculato gli indici: un numero eccessivo di indici rallenta il db nella scrittura pur avendo vantaggi in fase di lettura. L'opzione migliore è quella di equilibrarne la presenza per ottenere maggiormente vantaggi, tenendo conto dei punti di forza del database del progetto;
+
+2)Utilizzare le proiezioni il più spesso possibile: le proiezioni aiutano la scrittura di query più efficienti;
+
+3)Utilizzare SKIP & TAKE: l'utilizzo degli operatori di filtro SKIP e TAKE può ridurre il carico degli insiemi di risultati che vengono restituiti dalle query che eseguiamo, consentendo di tralasciare il superfluo e ottenere solo gli insiemi di dati che ci sono più utili;
+
+4)Utilizzare le operazioni asincrone: l'utilizzo di operazioni asincrone rende più fluida l'esecuzione del programma e consente di ottenere le risposte senza dover attendere la fine di altri processi precedentemente inizializzati bloccando l'esecuzione del programma;
+
+5)Eseguire le "query grezze": un metodo molto utile è il "FromSQLRaw()". Nonostante sia in contrasto con EFCore, talvolta è meglio eseguire le query in maniera grezza poiché potrebbe risultare più efficiente. Combinare le query grezze con le funzionalità di EFCore consente una scrittura maggiormente efficace;
+
+6)Non eseguire il TRACKING di ogni query: la selezione di specifiche modifiche di cui tenere traccia è utile per non appesantire le operazioni e risparmiare potenza di esecuzione del programma la cui memoria può essere utile per altro;
+
+7)Eseguire operazioni in BATCH: eseguire più operazioni con una singola dichiarazione;
+
+
+
+TRACKING e SALVATAGGIO DEI CAMBIAMENTI: 
+Il TRACKING è più efficace se utilizzato quando la stessa istanza del DbContext è usata sia per le query sia per le modifiche. EFCore traccia automaticamente lo stato delle entità interrogate e rileva ogni modifica effettuata appena viene richiamato il metodo SaveChanges().
+
+Per verificare manualmente cosa è stato cambiato durante le modifiche possiamo utilizzare il metodo DetectChanges() durante il salvataggo delle modifiche.
+
+Entity States:
+- DETACHED: quando si esegue una query ma non si traccia;
+- ADDED: un record che viene aggiunto al database;
+- UNCHANGED: record che vengono richiesti ma restano immutati;
+- MODIFIED: record che vengono richiesti e poi modificati;
+- DELETED: record che viene rimosso dal database;
+
+I metodi di cui sopra lavorano sulle entità e le loro entità correlate.
+
+La proprietà ENTITYENTRY.STATE può essere usata per impostare lo stato di una singola entità. 
+
+SaveChanges() e SaveChangesAsync() si utilizzano per confermare le modifiche pendenti ai record di un database. SaveChanges è un metodo TRANSAZIONALE: ciò significa che le modifiche possono essere salvate solo se hanno pieno successo o falliscono nel loro complesso. Successi parziali sanciscono il fallimento dell'operazione di salvataggio dei cambiamenti. Se ad esempio abbiamo modificato 3 elementi di un db e uno solo di questi cambiamenti non ha successo, l'intera operazione fallisce.
+
+
+OPERAZIONI DI INSERT:
+Una semplice insert consente di inserire uno o più elementi in una tabella database. Una INSERT di base è così composta nel codice:
+
+	var newCoach = new Coach
+	{
+		Name = "Jose Mourinho",
+		CreatedDate = DateTime.Now,
+	};
+	await context.Coaches.AddAsync(newCoach);
+	await context.SaveChangesAsync();
+
+LOOP INSERT:
+Una loop insert consente di inserire più record con una sola richiesta. Istanziati i record da inserire si passa ad applicare un ciclo foreach che li aggiunge al database. Si può scegliere di inserire il SaveChanges all'interno del loop per far sì che ogni record venga salvato prima di passare all'aggiunta del successivo MA non è una best practice.
+La scelta più utilizzata e accettata è quella di salvare i cambiamenti all'esterno del ciclo foreach.
+
+ESEMPIO:  
+			var newCoach = new Coach
+			{
+				Name = "Jose Mourinho",
+				CreatedDate = DateTime.Now,
+			};
+			
+			var newCoach1 = new Coach
+			{
+				Name = "Theodore Withmore",
+				CreatedDate = DateTime.Now,
+			};
+			
+			List<Coach> coaches = new List<Coach>
+			{
+				newCoach1,
+				newCoach
+			};
+			foreach (var coach in coaches)
+			{
+				await context.Coaches.AddAsync(coach);
+			}
+			Console.WriteLine(context.ChangeTracker.DebugView.LongView);
+			await context.SaveChangesAsync();
+			Console.WriteLine(context.ChangeTracker.DebugView.LongView);
+			foreach (var coach in coaches)
+			{
+				Console.WriteLine($"{coach.Id} - {coach.Name}");
+			}
+			
+			N.B: i due ConsoleWriteline fuori dal loop servono per visualizzare il tracking delle modifiche al database in modo da ricevere una visual dettagliata delle modifiche tramite la clausola LongView. Con ShortView si ottiene un recap più sintetico.
+			
+			Non si inserisce l'ID poiché, essendo una PrimaryKey, viene generato automaticamente e in modo consequenziale all'inserimento dei dati nella tabella.
+			Per visualizzarlo si inserisce un foreach con un Console.WriteLine interno che lo stampi al lancio.
+
+BATCH INSERT:
+Per le Batch Insert si sostituisce il ciclo foreach con le successive WriteLine e secondo foreach per assottigliare il codice in modo da renderlo più fluido mantenendo comunque le insert di base:
+
+			var newCoach = new Coach
+			{
+				Name = "Jose Mourinho",
+				CreatedDate = DateTime.Now,
+			};
+			
+			var newCoach1 = new Coach
+			{
+				Name = "Theodore Withmore",
+				CreatedDate = DateTime.Now,
+			};
+			
+			List<Coach> coaches = new List<Coach>
+			{
+				newCoach1,
+				newCoach
+			};
+			await context.Coaches.AddRangeAsync(coaches);
+			await context.SaveChangesAsync();
+			
+Otteniamo lo stesso risultato con meno codice da scrivere. C'è un PERÒ con le batch: alcuni database engine hanno dei parametri entro cui poter effettuare le insert.
+
+UPDATE:
+le operazioni di Update aggiornano i record del database. Per effettuare un update da query si ricerca tramite il metodo FindAsync() e si specifica il parametro (o i parametri) da aggiornare.
+
+			var coach = await context.Coaches.FindAsync(9);
+			coach.Name = "Trevoir Williams";
+			await context.SaveChangesAsync();
+
+in questo modo recuperiamo il record della tabella Coaches che corrisponde all'ID passato al FindAsync e ne cambiamo il parametro del nome salvando le modifiche. Possiamo fare ciò poiché il metodo FindAsync traccia automaticamente il record e consente di manipolarlo.
+Se si specifica NoTracking prima della Find non si potrà accedere al metodo poiché il Find RICHIEDE il tracciamento.
+E senza il tracciamento non è possibile modificare i record e salvare i cambiamenti.
+Per aggirare questa "clausola" si può settare manualmente l'update in modo tale che il tracciamento sia bypassato.
+Si richiama il record da modificare, si inserisce il metodo NoTracking() e si specifica quale record tramite il FirstOrDefaultAsync a cui si passa una lambda che indica quale record si è scelto di modificare. Si indica la modifica e si applica tramite Update() in cui si indica la variabile modificata per poi salvare i cambiamenti con SaveChanges().
+
+	ESEMPIO:
+			var coach1 = await context.Coaches
+				.AsNoTracking()
+				.FirstOrDefaultAsync(q => q.Id == 10);
+			coach1.Name = "Testing No Tracking  Behavior - Entity State Modified";
+			context.Update(coach1);
+			await context.SaveChangesAsync();
+			
+Per modificare manualmente lo stato del record da modificare (da Detached a Modified) possiamo sostituire il context.Update con la riga ' context.Entry(coach1).State = EntityState.Modified;'
+
+EXECUTE UPDATE:
+con il metodo ExecuteUpdateAsync() si può contrarre il codice di update per ottenere l'operazione Update.
+Si sceglie il record da eliminare richiamando il context e con una lambda all'interno del metodo ExecuteUpdateAsync si passano le modifiche che si vogliono apportare. Si possono modificare più parametri dello stesso record allo stesso tempo:
+
+			await context.Coaches.Where(q => q.Name == "Jose Mourinho").ExecuteUpdateAsync(set => set
+				.SetProperty(prop => prop.Name, "Pep Guardiola")
+				.SetProperty(prop => prop.CreatedDate, DateTime.Now)
+			);
+
+
+DELETE:
+per eliminare un record si esegue un procedimento simile all'update: si ricerca il record e si comunica la decisione di eliminarlo.
+
+ESEMPIO:  	
+			var coach = await context.Coaches.FindAsync(10);
+			//context.Remove(coach);
+			context.Entry(coach).State = EntityState.Deleted;
+			await context.SaveChangesAsync();
+
+
+EXECUTE DELETE:
+con il metodo ExecuteDeleteAsync() si può contrarre il codice scritto per ottenere l'operazione di Delete.
+Si seleziona la riga da eliminare con una lambda di richiamo al context e poi si aggiunge il metodo dopo aver specificato quale record si desidera eliminare:
+
+			await context.Coaches.Where(q => q.Name == "Theodore Withmore").ExecuteDeleteAsync();
+
+
+
+MIGRATION SCRIPT: 
+per generare uno script delle migrazioni bisogna inserire il comando Script-Migration seguito dal nome delle migrazioni e il context utilizzato. Si può utilizzare il parametro -Idempotent che controlla le migrazioni già effettuate ed applica solamente gli aggiornamenti mancanti tra la vecchia e la nuova versione.
+
+
+ROLLING BACK delle MIGRATIONS & DATABASE CHANGES:
+per eseguire un rollback alle migrazioni precedenti si utilizza il comando "Get-Migration -Context NomeDelContext" per ottenere la lista di tutte le migrazioni effettuate precedentemente. In questo modo possiamo selezionare la migrazione a cui tornare tramite il comando "Update-Database -Context NomeDelContext -Migration IdDellaMigrazione"
+
+Il comando Get-Migration mostra anche quali migrazioni sono attualmente applicate al database.
+
+APPLICARE LE MIGRAZIONI AL RUNTIME:
+per applicare le migrazioni al lancio dell'applicazioni durante la vase di DEVELOPMENT, si può utilizzare il metodo asincrono MigrateAsync() effettuando la chiamata dopo l'istanziazione del DbContext nel file Program.cs:
+
+		using var context = new FootballLeagueDbContext();
+		await context.Database.MigrateAsync();
+		
+
