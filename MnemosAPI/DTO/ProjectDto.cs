@@ -36,9 +36,11 @@ namespace MnemosAPI.DTO
 
         public string? JobCode { get; set; }
 
-        public User User { get; set; }
+        public User? User { get; set; }
 
         public DifficultiesEnum? Difficulty { get; set; }
+
+        public StatusesEnum? Status { get; set; }
 
         public string? Goals { get; set; }
     }

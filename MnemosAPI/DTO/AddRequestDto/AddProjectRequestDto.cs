@@ -31,6 +31,8 @@ namespace MnemosAPI.DTO.AddRequestDto
 
         public DifficultiesEnum? Difficulty { get; set; }
 
+        public StatusesEnum? Status { get; set; }
+
         public string? Goals { get; set; }
 
     }
