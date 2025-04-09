@@ -35,6 +35,7 @@ namespace MnemosAPI.Services
                 JobCode = addProjectRequestDto.JobCode,
                 UserId = addProjectRequestDto.UserId,
                 Difficulty = addProjectRequestDto.Difficulty.ToString(),
+                Status = addProjectRequestDto.Status.ToString(),
                 Goals = addProjectRequestDto.Goals
             };
 
@@ -63,6 +64,7 @@ namespace MnemosAPI.Services
                 Sector = project.Sector,
                 JobCode = project.JobCode,
                 Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
+                Status = Enum.Parse<StatusesEnum>(project.Status),
                 Goals = project.Goals,
 
             };
