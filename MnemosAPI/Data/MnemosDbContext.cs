@@ -40,5 +40,7 @@ public partial class MnemosDbContext : DbContext
         OnModelCreatingPartial(modelBuilder);
     }
 
+    
+
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

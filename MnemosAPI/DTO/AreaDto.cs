@@ -8,6 +8,6 @@ namespace MnemosAPI.DTO
 
         public string Name { get; set; }
 
-        public Skill Skill { get; set; }
+        public List<SkillDto> Skill { get; set; }
     }
 }
