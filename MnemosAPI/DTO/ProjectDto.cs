@@ -43,8 +43,8 @@ namespace MnemosAPI.DTO
         public StatusesEnum? Status { get; set; }
 
         public string? Goals { get; set; }
-
-        //testone ramo personale
+      
+        //test
 
     }
 }
