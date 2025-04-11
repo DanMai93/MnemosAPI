@@ -10,7 +10,7 @@ namespace MnemosAPI.DTO
 
         public int CustomerId { get; set; }
 
-        public Customer Customer { get; set; }
+        public CustomerDto Customer { get; set; }
 
         public string? EndCustomer { get; set; }
 
@@ -22,21 +22,21 @@ namespace MnemosAPI.DTO
 
         public string? WorkOrder { get; set; }
 
-        public List<Skill> Skills { get; set; }
+        public List<SkillDto> Skills { get; set; }
 
         public int SkillId { get; set; }
 
-        public Role? Role { get; set; }
+        public RoleDto? Role { get; set; }
 
         public int RoleId { get; set; }
 
-        public Sector? Sector { get; set; }
+        public SectorDto? Sector { get; set; }
 
         public int SectorId { get; set; }
 
         public string? JobCode { get; set; }
 
-        public User User { get; set; }
+        public UserDto User { get; set; }
 
         public DifficultiesEnum? Difficulty { get; set; }
 
