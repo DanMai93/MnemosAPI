@@ -44,5 +44,7 @@ namespace MnemosAPI.DTO
 
         public string? Goals { get; set; }
 
+        //testone ramo personale
+
     }
 }
