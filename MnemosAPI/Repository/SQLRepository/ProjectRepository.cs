@@ -48,6 +48,14 @@ namespace MnemosAPI.Repository.SQLRepository
             return groupedByEndCustomer;
         }
 
+        public async Task<List<IGrouping<DateOnly, Project>>> GetGroupedByStartDateAsync()
+        {
+            var groupedByStartDate = await dbContext.Projects
+                .GroupBy(x => x.StartDate)
+                .ToListAsync();
+
+            return groupedByStartDate;
+        }
     }
 }
 

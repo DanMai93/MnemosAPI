@@ -57,6 +57,13 @@ namespace MnemosAPI.Controllers
             return result;
         }
 
+        [HttpGet("ByStartDate")]
+        public async Task<IEnumerable<GroupByDateDto>> GetGroupedByStartDateAsync()
+        {
+            return await projectService.GetGroupedByStartDateAsync();
+        }
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ProjectDto>> GetProjectByIdAsync([FromRoute] int id)
         {

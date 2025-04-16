@@ -21,6 +21,9 @@ namespace MnemosAPI.Services
 
         Task<IEnumerable<EndCustomerGroupDto>> GetGroupedByEndCustomerAsync();
 
+        Task<IEnumerable<GroupByDateDto>> GetGroupedByStartDateAsync();
+
+
         Task<ProjectDto> GetProjectAsync(int projectId);
 
         Task<ProjectDto> UpdateProjectAsync(int projectId, UpdateProjectRequestDto updateProjectRequestDto);
