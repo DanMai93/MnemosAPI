@@ -40,6 +40,11 @@ namespace MnemosAPI.DTO
 
         public DifficultiesEnum? Difficulty { get; set; }
 
+        public StatusesEnum? Status { get; set; }
+
         public string? Goals { get; set; }
+      
+        //test
+
     }
 }
