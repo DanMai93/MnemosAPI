@@ -35,8 +35,10 @@ namespace MnemosAPI.Data.Configurations
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Skill_Scale");
 
-            entity.HasMany(d => d.Projects)
-                .WithMany(p => p.Skills);
+            //entity.HasMany(p => p.Projects)
+            //     .WithOne()
+            //     .HasForeignKey(p => p.Id)
+            //     .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasMany(d => d.Categories)
                 .WithMany(p => p.Skills);

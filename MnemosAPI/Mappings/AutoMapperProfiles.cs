@@ -32,8 +32,7 @@ namespace MnemosAPI.Mappings
             CreateMap<Skill, SkillDto>().ReverseMap()
             .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))
             .ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.Areas))
-            .ForMember(dest => dest.Scale, opt => opt.MapFrom(src => src.Scales))
-            .ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Projects));
+            .ForMember(dest => dest.Scale, opt => opt.MapFrom(src => src.Scales));
 
             CreateMap<User, UserDto>().ReverseMap();
         }

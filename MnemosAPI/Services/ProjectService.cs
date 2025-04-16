@@ -5,18 +5,20 @@ using MnemosAPI.DTO.UpdateRequestDto;
 using MnemosAPI.Models;
 using MnemosAPI.Repository;
 using MnemosAPI.Utilities;
-using System.Collections.Generic;
 
 namespace MnemosAPI.Services
 {
     public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
+        private readonly ISkillRepository _skillRepository;
         private readonly IMapper _mapper;
+        
 
-        public ProjectService(IProjectRepository projectRepository, IMapper mapper)
+        public ProjectService(IProjectRepository projectRepository, ISkillRepository skillRepository, IMapper mapper)
         {
             _projectRepository = projectRepository;
+            _skillRepository = skillRepository;
             _mapper = mapper;
         }
         public async Task<ProjectDto> CreateProjectAsync(AddProjectRequestDto addProjectRequestDto)
@@ -35,19 +37,22 @@ namespace MnemosAPI.Services
                 JobCode = addProjectRequestDto.JobCode,
                 UserId = addProjectRequestDto.UserId,
                 Difficulty = addProjectRequestDto.Difficulty.ToString(),
+                Status = addProjectRequestDto.Status.ToString(),
                 Goals = addProjectRequestDto.Goals
             };
 
-            foreach (var item in addProjectRequestDto.Skills)
+            foreach (var skillId in addProjectRequestDto.Skills)
             {
-                var skill = new Skill();
-                skill.Id = item;
-                project.Skills.Add(skill);
+                // Retrieve the full Skill entity from the database
+                var skill = await _skillRepository.GetByIdAsync(skillId);
+                if (skill != null)
+                {
+                    project.Skills.Add(skill);
+                }
             }
 
             project = await _projectRepository.AddAsync(project);
 
-#pragma warning disable CS8629 // Il tipo valore nullable non può essere Null.
             var projectDto = new ProjectDto
             {
                 Id = project.Id,
@@ -58,15 +63,14 @@ namespace MnemosAPI.Services
                 EndDate = project.EndDate,
                 Description = project.Description,
                 WorkOrder = project.WorkOrder,
-                RoleId = (int)project.RoleId,
-                Skills = (List<Skill>)project.Skills,
-                Sector = project.Sector,
+                RoleId = (int)project.RoleId!,
+                Skills = _mapper.Map<List<SkillDto>>(project.Skills), 
+                Sector = _mapper.Map<SectorDto>(project.Sector),      
                 JobCode = project.JobCode,
                 Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
+                Status = Enum.Parse<StatusesEnum>(project.Status),
                 Goals = project.Goals,
-
             };
-#pragma warning restore CS8629 // Il tipo valore nullable non può essere Null.
 
             return projectDto;
         }

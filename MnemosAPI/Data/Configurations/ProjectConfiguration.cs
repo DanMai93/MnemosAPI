@@ -5,6 +5,7 @@ using MnemosAPI.Data;
 using MnemosAPI.Models;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace MnemosAPI.Data.Configurations
 {
@@ -40,9 +41,18 @@ namespace MnemosAPI.Data.Configurations
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Projects_Users");
 
-            entity.HasMany(d => d.Skills)
-                .WithMany(p => p.Projects);
-                  
+
+            entity.HasMany(p => p.Skills)
+                .WithMany(s => s.Projects)
+                .UsingEntity<Dictionary<string, object>>(
+                "ProjectSkill",
+                j => j.HasOne<Skill>().WithMany(),
+                j => j.HasOne<Project>().WithMany());
+
+
+
+
+
 
             OnConfigurePartial(entity);
         }

@@ -40,6 +40,8 @@ public partial class Project
 
     public string Difficulty { get; set; }
 
+    public string Status { get; set; }
+
     public string Goals { get; set; }
 
 }
