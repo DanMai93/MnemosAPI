@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MnemosAPI.DTO;
 using MnemosAPI.DTO.AddRequestDto;
+using MnemosAPI.DTO.FiltersDTO;
 using MnemosAPI.DTO.UpdateRequestDto;
 using MnemosAPI.Services;
 
@@ -14,7 +15,6 @@ namespace MnemosAPI.Controllers
 
         private readonly IMapper mapper;
         private readonly IProjectService projectService;
-
 
         public ProjectsController(IMapper mapper, IProjectService projectService)
         {
@@ -29,7 +29,27 @@ namespace MnemosAPI.Controllers
             return await projectService.GetProjectsAsync();
         }
 
-        // GET: api/Projects/5
+        [HttpGet("ByCustomer")]
+        public async Task<IEnumerable<CustomerGroupDto>> GetGroupedByCustomerAsync()
+        {
+            var result = await projectService.GetGroupedByCustomerAsync();
+            return result;
+        }
+
+        [HttpGet("BySector")]
+        public async Task<IEnumerable<SectorGroupDto>> GetGroupedBySectorAsync()
+        {
+            var result = await projectService.GetGroupedBySectorAsync();
+            return result;
+        }
+
+        [HttpGet("ByRole")]
+        public async Task<IEnumerable<RoleGroupDto>> GetGroupedByRoleAsync()
+        {
+            var result = await projectService.GetGroupedByRoleAsync();
+            return result;
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ProjectDto>> GetProjectByIdAsync([FromRoute] int id)
         {
@@ -78,3 +98,4 @@ namespace MnemosAPI.Controllers
         }
     }
 }
+

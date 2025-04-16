@@ -1,12 +1,14 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using MnemosAPI.Data;
+using MnemosAPI.DTO;
+using NuGet.Versioning;
 
 namespace MnemosAPI.Repository.SQLRepository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly MnemosDbContext dbContext;
+        protected readonly MnemosDbContext dbContext;
 
         public Repository(MnemosDbContext dbContext)
         {
