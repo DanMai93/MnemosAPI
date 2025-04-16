@@ -9,7 +9,7 @@ namespace MnemosAPI.DTO.AddRequestDto
         
         public int CustomerId { get; set; }
 
-        public string? EndCustomer { get; set; }
+        public int EndCustomerId { get; set; }
 
         public DateOnly StartDate { get; set; }
 
@@ -34,6 +34,6 @@ namespace MnemosAPI.DTO.AddRequestDto
         public StatusesEnum? Status { get; set; }
 
         public string? Goals { get; set; }
-
+        
     }
 }

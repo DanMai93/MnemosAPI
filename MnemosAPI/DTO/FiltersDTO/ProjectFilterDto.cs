@@ -25,7 +25,7 @@ namespace MnemosAPI.DTO.FiltersDTO
         public UserDto User { get; set; }
 
         public int UserId { get; set; }
-
+        public int EndCustomerId { get; internal set; }
     }
         
 }

@@ -27,7 +27,7 @@ namespace MnemosAPI.Services
             {
                 Title = addProjectRequestDto.Title,
                 CustomerId = addProjectRequestDto.CustomerId,
-                EndCustomer = addProjectRequestDto.EndCustomer,
+                EndCustomerId = addProjectRequestDto.EndCustomerId,
                 StartDate = addProjectRequestDto.StartDate,
                 EndDate = addProjectRequestDto.EndDate,
                 Description = addProjectRequestDto.Description,
@@ -58,7 +58,7 @@ namespace MnemosAPI.Services
                 Id = project.Id,
                 Title = project.Title,
                 CustomerId = project.CustomerId,
-                EndCustomer = project.EndCustomer,
+                EndCustomerId = project.EndCustomerId,
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
                 Description = project.Description,
@@ -108,7 +108,7 @@ namespace MnemosAPI.Services
                     {
                         Id = grouped.Key.Id,
                         Title = grouped.Key.Title,
-                        EndCustomer = grouped.Key.Notes,
+                        EndCustomerId = grouped.Key.Id,
                         StartDate = grouped.Key.Projects.First().StartDate,
                         RoleId = grouped.Key.Id,
                         SectorId = grouped.Key.Id,
@@ -135,7 +135,7 @@ namespace MnemosAPI.Services
                         Id = sector.Key.Id,
                         Title = sector.Key.Title,
                         CustomerId = sector.Key.Id,
-                        EndCustomer = sector.Key.ToString(),
+                        EndCustomerId = sector.Key.Id,
                         StartDate = sector.Key.Projects.First().StartDate,
                         RoleId = sector.Key.Id,
                         SectorId = sector.Key.Id,
@@ -164,7 +164,7 @@ namespace MnemosAPI.Services
                             Id = role.Key.Id,
                             Title = role.Key.Title,
                             CustomerId = role.Key.Id,
-                            EndCustomer = role.Key.ToString(),
+                            EndCustomerId = role.Key.Id,
                             StartDate = role.Key.Projects.First().StartDate,
                             RoleId = role.Key.Id,
                             SectorId = role.Key.Id,
@@ -173,6 +173,35 @@ namespace MnemosAPI.Services
                     };
                     result.Add(roleGroupDto);
                 
+            }
+
+            return result;
+        }
+
+        public async Task<IEnumerable<EndCustomerGroupDto>> GetGroupedByEndCustomerAsync()
+        {
+            var groupedEndCustomer = await _projectRepository.GetGroupedByEndCustomerAsync();
+            var result = new List<EndCustomerGroupDto>();
+            foreach (var endCustomer  in groupedEndCustomer)
+            {
+                var endCustomerDto = new EndCustomerGroupDto()
+                {
+                    Id = endCustomer.Key.Id,
+                    Title = endCustomer.Key.Title,
+                    Projects = endCustomer.Select(projectFilter => new ProjectFilterDto
+                    {
+                        Id = endCustomer.Key.Id,
+                        Title = endCustomer.Key.Title,
+                        CustomerId = endCustomer.Key.Id,
+                        EndCustomerId = endCustomer.Key.Id,
+                        StartDate = endCustomer.Key.Projects?.FirstOrDefault()?.StartDate ?? default,
+                        RoleId = endCustomer.Key.Id,
+                        SectorId = endCustomer.Key.Id,
+                        UserId = endCustomer.Key.Id
+
+                    }).ToList()
+                };
+                result.Add(endCustomerDto);
             }
 
             return result;

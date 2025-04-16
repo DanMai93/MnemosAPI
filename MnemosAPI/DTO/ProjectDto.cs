@@ -12,7 +12,9 @@ namespace MnemosAPI.DTO
 
         public CustomerDto Customer { get; set; }
 
-        public string? EndCustomer { get; set; }
+        public int EndCustomerId { get; set; }
+
+        public EndCustomerDto EndCustomer { get; set; }
 
         public DateOnly StartDate { get; set; }
 
@@ -44,7 +46,7 @@ namespace MnemosAPI.DTO
 
         public string? Goals { get; set; }
       
-        //test
+        
 
     }
 }

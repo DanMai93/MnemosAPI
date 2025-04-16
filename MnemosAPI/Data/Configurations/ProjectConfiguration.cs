@@ -16,7 +16,6 @@ namespace MnemosAPI.Data.Configurations
             entity.Property(e => e.Difficulty)
                 .HasMaxLength(12)
                 .IsUnicode(false);
-            entity.Property(e => e.EndCustomer).HasMaxLength(50);
             entity.Property(e => e.Goals).IsUnicode(false);
             entity.Property(e => e.JobCode).HasMaxLength(30);
             entity.Property(e => e.Title)
@@ -27,6 +26,11 @@ namespace MnemosAPI.Data.Configurations
                 .HasForeignKey(d => d.CustomerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Projects_Customers");
+
+            entity.HasOne(d => d.EndCustomer).WithMany(p => p.Projects)
+                .HasForeignKey(d => d.EndCustomerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Projects_EndCustomers");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.RoleId)

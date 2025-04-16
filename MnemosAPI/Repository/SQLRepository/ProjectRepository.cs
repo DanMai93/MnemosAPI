@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MnemosAPI.Data;
+using MnemosAPI.DTO.FiltersDTO;
 using MnemosAPI.Models;
 
 namespace MnemosAPI.Repository.SQLRepository
@@ -35,6 +36,16 @@ namespace MnemosAPI.Repository.SQLRepository
                 .ToListAsync();
 
             return groupedByRole;
+        }
+
+        public async Task<List<IGrouping<EndCustomer, Project>>> GetGroupedByEndCustomerAsync()
+        {
+            var groupedByEndCustomer = await dbContext.Projects
+                .Where(x => x.EndCustomer != null)
+                .GroupBy(x => x.EndCustomer)
+                .ToListAsync();
+
+            return groupedByEndCustomer;
         }
 
     }
