@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MnemosAPI.Data;
 
@@ -11,9 +12,11 @@ using MnemosAPI.Data;
 namespace MnemosAPI.Migrations
 {
     [DbContext(typeof(MnemosDbContext))]
-    partial class MnemosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250416123521_FiltriGet")]
+    partial class FiltriGet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace MnemosAPI.Migrations
 
                     b.HasIndex("SkillsId");
 
-                    b.ToTable("CategorySkill", (string)null);
+                    b.ToTable("CategorySkill");
                 });
 
             modelBuilder.Entity("MnemosAPI.Models.Area", b =>
@@ -86,7 +89,7 @@ namespace MnemosAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("MnemosAPI.Models.EndCustomer", b =>
@@ -108,7 +111,7 @@ namespace MnemosAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EndCustomer", (string)null);
+                    b.ToTable("EndCustomer");
                 });
 
             modelBuilder.Entity("MnemosAPI.Models.Project", b =>
@@ -183,7 +186,7 @@ namespace MnemosAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("MnemosAPI.Models.Role", b =>
@@ -204,7 +207,7 @@ namespace MnemosAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("MnemosAPI.Models.Scale", b =>
@@ -241,7 +244,7 @@ namespace MnemosAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sectors", (string)null);
+                    b.ToTable("Sectors");
                 });
 
             modelBuilder.Entity("MnemosAPI.Models.Skill", b =>
@@ -313,7 +316,7 @@ namespace MnemosAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ProjectSkill", b =>
@@ -328,7 +331,7 @@ namespace MnemosAPI.Migrations
 
                     b.HasIndex("SkillsId");
 
-                    b.ToTable("ProjectSkill", (string)null);
+                    b.ToTable("ProjectSkill");
                 });
 
             modelBuilder.Entity("CategorySkill", b =>

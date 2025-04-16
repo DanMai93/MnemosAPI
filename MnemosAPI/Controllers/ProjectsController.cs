@@ -50,6 +50,13 @@ namespace MnemosAPI.Controllers
             return result;
         }
 
+        [HttpGet("ByEndCustomer")]
+        public async Task<IEnumerable<EndCustomerGroupDto>> GetGroupedByEndCustomerAsync()
+        {
+            var result = await projectService.GetGroupedByEndCustomerAsync();
+            return result;
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ProjectDto>> GetProjectByIdAsync([FromRoute] int id)
         {
