@@ -207,6 +207,25 @@ namespace MnemosAPI.Services
             return result;
         }
 
+        public async Task<IEnumerable<GroupByDateDto>> GetGroupedByStartDateAsync()
+        {
+            var groupedProjects = await _projectRepository.GetGroupedByStartDateAsync();
+            var result = groupedProjects.Select(group => new GroupByDateDto
+            {
+                Date = group.Key,
+                Projects = group.Select(project => new ProjectDto
+                {
+                    Id = project.Id,
+                    Title = project.Title,
+                    StartDate = project.StartDate,
+                    EndDate = project.EndDate
+                }).ToList()
+            });
+
+            return result;
+        }
+
+
         public async Task<ProjectDto> UpdateProjectAsync(int projectId, UpdateProjectRequestDto updateProjectRequestDto)
         {
             await UpdateProjectAsync(projectId, updateProjectRequestDto);
