@@ -3,6 +3,7 @@ using MnemosAPI.Models;
 using MnemosAPI.DTO;
 using MnemosAPI.DTO.AddRequestDto;
 using MnemosAPI.DTO.UpdateRequestDto;
+using MnemosAPI.DTO.FiltersDTO;
 
 namespace MnemosAPI.Mappings
 {
@@ -17,17 +18,22 @@ namespace MnemosAPI.Mappings
 
             CreateMap<Customer, CustomerDto>().ReverseMap()
                 .ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Projects));
+            CreateMap<CustomerGroupDto, Customer>().ReverseMap();
 
             CreateMap<Project, ProjectDto>().ReverseMap();
             CreateMap<AddProjectRequestDto, Project>().ReverseMap();
-            CreateMap<UpdateProjectRequestDto, ProjectDto>().ReverseMap();            
+            CreateMap<UpdateProjectRequestDto, ProjectDto>().ReverseMap();
+            CreateMap<Project, ProjectFilterDto>().ReverseMap();
 
             CreateMap<Role, RoleDto>().ReverseMap();
+            CreateMap<RoleGroupDto, Role>().ReverseMap();
 
             CreateMap<Scale, ScaleDto>().ReverseMap()
                 .ForMember(dest => dest.Skills, opt => opt.MapFrom(src => src.Skills));
 
             CreateMap<Sector, SectorDto>().ReverseMap();
+            CreateMap<Sector, SectorGroupDto>().ReverseMap()
+                .ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Projects));
 
             CreateMap<Skill, SkillDto>().ReverseMap()
             .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))

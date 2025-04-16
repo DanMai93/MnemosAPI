@@ -41,7 +41,6 @@ namespace MnemosAPI.Data.Configurations
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Projects_Users");
 
-
             entity.HasMany(p => p.Skills)
                 .WithMany(s => s.Projects)
                 .UsingEntity<Dictionary<string, object>>(
@@ -49,14 +48,10 @@ namespace MnemosAPI.Data.Configurations
                 j => j.HasOne<Skill>().WithMany(),
                 j => j.HasOne<Project>().WithMany());
 
-
-
-
-
-
             OnConfigurePartial(entity);
         }
 
         partial void OnConfigurePartial(EntityTypeBuilder<Project> entity);
+        
     }
 }
