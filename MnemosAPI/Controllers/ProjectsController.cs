@@ -64,6 +64,13 @@ namespace MnemosAPI.Controllers
         }
 
 
+        [HttpGet("ByActiveStatus")]
+        public async Task<IEnumerable<ProjectDto>> GetByActiveStatus()
+        {
+            return await projectService.GetByInProgressStatusAsync();
+        }
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ProjectDto>> GetProjectByIdAsync([FromRoute] int id)
         {
