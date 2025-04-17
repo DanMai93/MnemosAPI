@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MnemosAPI.DTO;
 using MnemosAPI.DTO.AddRequestDto;
 using MnemosAPI.DTO.FiltersDTO;
@@ -91,6 +92,16 @@ namespace MnemosAPI.Services
         {
             var projectList = await _projectRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<ProjectDto>>(projectList);
+        }
+
+        public async Task<IEnumerable<ProjectDto>> GetLatestProjectsAsync(int count)
+        {
+            var latestProjects = (await _projectRepository.GetLatestProjectsAsync(count))
+                .OrderByDescending(p => p.StartDate) 
+                .Take(count) 
+                .ToList();
+
+            return latestProjects.Select(project => _mapper.Map<ProjectDto>(project));
         }
 
 

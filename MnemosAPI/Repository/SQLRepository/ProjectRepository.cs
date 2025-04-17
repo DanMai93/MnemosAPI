@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MnemosAPI.Data;
+using MnemosAPI.DTO;
 using MnemosAPI.DTO.FiltersDTO;
 using MnemosAPI.Models;
+using MnemosAPI.Services;
 
 namespace MnemosAPI.Repository.SQLRepository
 {
@@ -10,6 +13,17 @@ namespace MnemosAPI.Repository.SQLRepository
         public ProjectRepository(MnemosDbContext dbContext) : base(dbContext)
         {
         }
+
+        public async Task<IEnumerable<Project>> GetLatestProjectsAsync(int count)
+        {
+            var latestProjects = await dbContext.Projects
+                .OrderByDescending(p => p.StartDate) 
+                .Take(count) 
+                .ToListAsync();
+
+            return latestProjects;
+        }
+
 
         public async Task<List<IGrouping<Customer, Project>>> GetGroupedByCustomerAsync()
         {
