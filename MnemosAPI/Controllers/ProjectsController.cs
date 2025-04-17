@@ -64,7 +64,7 @@ namespace MnemosAPI.Controllers
         }
 
         [HttpGet("Latest")]
-        public async Task<IEnumerable<ProjectDto>> GetLatestProjectsAsync([FromQuery] int count)
+        public async Task<IEnumerable<ProjectDto>> GetLatestProjectsAsync([FromQuery] int count = 5)
         {
             return await projectService.GetLatestProjectsAsync(count);
         }

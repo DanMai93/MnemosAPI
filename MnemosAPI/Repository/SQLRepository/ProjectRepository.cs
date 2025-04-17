@@ -17,7 +17,8 @@ namespace MnemosAPI.Repository.SQLRepository
         public async Task<IEnumerable<Project>> GetLatestProjectsAsync(int count)
         {
             var latestProjects = await dbContext.Projects
-                .OrderByDescending(p => p.StartDate) 
+                .OrderByDescending(p => p.StartDate)
+                .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
                 .Take(count) 
                 .ToListAsync();
 
