@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.InkML;
+using Microsoft.Build.ObjectModelRemoting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using MnemosAPI.DTO;
 using MnemosAPI.DTO.AddRequestDto;
 using MnemosAPI.DTO.FiltersDTO;
@@ -91,6 +95,40 @@ namespace MnemosAPI.Services
         {
             var projectList = await _projectRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<ProjectDto>>(projectList);
+        }
+
+        public async Task<IEnumerable<ProjectDto>> GetLatestProjectsAsync(int count)
+        {
+            var latestProjects = (await _projectRepository.GetLatestProjectsAsync(count))
+                .OrderByDescending(p => p.StartDate)
+                .Take(count)
+                .ToList();
+
+            var latestProjectsDto = new List<ProjectDto>();
+
+            foreach (var project in latestProjects)
+            {
+                latestProjectsDto.Add(new ProjectDto
+                {
+                    Title = project.Title,
+                    Customer = new CustomerDto { Title = project.Customer.Title, Notes = project.Customer.Notes },
+                    EndCustomer = new EndCustomerDto { Title = project.EndCustomer.Title, Notes = project.EndCustomer.Notes },
+                    StartDate = project.StartDate,
+                    EndDate = project.EndDate,
+                    Description = project.Description,
+                    WorkOrder = project.WorkOrder,
+                    Role = new RoleDto { Title = project.Role.Title, Notes = project.Role.Notes },
+                    Sector = new SectorDto { Title = project.Sector.Title, Description = project.Sector.Description },
+                    Skills = _mapper.Map<List<SkillDto>>(project.Skills),
+                    JobCode = project.JobCode,
+                    User = new UserDto { DisplayName = project.User.DisplayName, FirstName = project.User.FirstName, LastName = project.User.LastName },
+                    Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
+                    Status = Enum.Parse<StatusesEnum>(project.Status),
+                    Goals = project.Goals
+                });
+            }
+
+            return latestProjectsDto;
         }
 
 

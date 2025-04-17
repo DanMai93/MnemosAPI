@@ -13,7 +13,7 @@ namespace MnemosAPI.DTO.UpdateRequestDto
 
         public DateOnly StartDate { get; set; }
 
-        public DateOnly? EndDate { get; set; }
+        public DateOnly EndDate { get; set; }
 
         public string? Description { get; set; }
 
@@ -29,9 +29,9 @@ namespace MnemosAPI.DTO.UpdateRequestDto
 
         public int UserId { get; set; }
 
-        public DifficultiesEnum? Difficulty { get; set; }
+        public DifficultiesEnum Difficulty { get; set; }
 
-        public StatusesEnum? Status { get; set; }
+        public StatusesEnum Status { get; set; }
 
         public string? Goals { get; set; }
     }

@@ -23,6 +23,7 @@ namespace MnemosAPI.Services
 
         Task<IEnumerable<GroupByDateDto>> GetGroupedByStartDateAsync();
 
+        Task<IEnumerable<ProjectDto>> GetLatestProjectsAsync(int count);
 
         Task<ProjectDto> GetProjectAsync(int projectId);
 
