@@ -9,7 +9,7 @@ namespace MnemosAPI.DTO.UpdateRequestDto
 
         public int CustomerId { get; set; }
 
-        public string? EndCustomer { get; set; }
+        public int EndCustomerId { get; set; }
 
         public DateOnly StartDate { get; set; }
 

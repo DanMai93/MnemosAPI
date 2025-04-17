@@ -12,7 +12,9 @@ public partial class Project
 
     public virtual Customer Customer { get; set; }
 
-    public string EndCustomer { get; set; }
+    public int EndCustomerId { get; set; }
+
+    public virtual EndCustomer EndCustomer { get; set; }
 
     public DateOnly StartDate { get; set; }
 
@@ -43,5 +45,7 @@ public partial class Project
     public string Status { get; set; }
 
     public string Goals { get; set; }
+
+    
 
 }

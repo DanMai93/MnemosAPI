@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MnemosAPI.Data;
 
@@ -11,9 +12,11 @@ using MnemosAPI.Data;
 namespace MnemosAPI.Migrations
 {
     [DbContext(typeof(MnemosDbContext))]
-    partial class MnemosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250416123521_FiltriGet")]
+    partial class FiltriGet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,6 +101,7 @@ namespace MnemosAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -129,7 +133,11 @@ namespace MnemosAPI.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(12)");
 
-                    b.Property<int>("EndCustomerId")
+                    b.Property<string>("EndCustomer")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("EndCustomerId")
                         .HasColumnType("int");
 
                     b.Property<DateOnly?>("EndDate")
@@ -349,11 +357,9 @@ namespace MnemosAPI.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Projects_Customers");
 
-                    b.HasOne("MnemosAPI.Models.EndCustomer", "EndCustomer")
+                    b.HasOne("MnemosAPI.Models.EndCustomer", null)
                         .WithMany("Projects")
-                        .HasForeignKey("EndCustomerId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Projects_EndCustomers");
+                        .HasForeignKey("EndCustomerId");
 
                     b.HasOne("MnemosAPI.Models.Role", "Role")
                         .WithMany("Projects")
@@ -372,8 +378,6 @@ namespace MnemosAPI.Migrations
                         .HasConstraintName("FK_Projects_Users");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("EndCustomer");
 
                     b.Navigation("Role");
 
