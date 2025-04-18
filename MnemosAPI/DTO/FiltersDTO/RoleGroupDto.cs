@@ -6,6 +6,6 @@
 
         public string Title { get; set; }
 
-        public List<ProjectFilterDto> Projects { get; set; }
+        public List<ProjectDto> Projects { get; set; }
     }
 }

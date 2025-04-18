@@ -16,6 +16,9 @@ namespace MnemosAPI.Repository
         Task<IEnumerable<Project>> GetLatestProjectsAsync(int count);
        
         Task<List<IGrouping<DateOnly, Project>>> GetGroupedByStartDateAsync();
+        Task<List<Project>> GetAllWithForeignKeysAsync();
+        Task<Project> GetAllWithForeignKeysByIdAsync(int id);
+        Task<List<Project>> GetByInProgressStatusAsync();
 
     }
 
