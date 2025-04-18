@@ -63,6 +63,13 @@ namespace MnemosAPI.Controllers
             return await projectService.GetGroupedByStartDateAsync();
         }
 
+        [HttpGet("Latest")]
+        public async Task<IEnumerable<ProjectDto>> GetLatestProjectsAsync([FromQuery] int count = 5)
+        {
+            return await projectService.GetLatestProjectsAsync(count);
+        }
+
+
 
         [HttpGet("ByActiveStatus")]
         public async Task<IEnumerable<ProjectDto>> GetByActiveStatus()
@@ -99,6 +106,7 @@ namespace MnemosAPI.Controllers
 
             return Ok(projectDto);
         }
+
 
         // POST: api/Projects
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

@@ -25,6 +25,7 @@ namespace MnemosAPI.Services
 
         Task<IEnumerable<ProjectDto>> GetByInProgressStatusAsync();
 
+        Task<IEnumerable<ProjectDto>> GetLatestProjectsAsync(int count);
 
         Task<ProjectDto> GetProjectAsync(int projectId);
 
