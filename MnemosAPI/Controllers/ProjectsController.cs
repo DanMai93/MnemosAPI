@@ -5,6 +5,7 @@ using MnemosAPI.DTO.AddRequestDto;
 using MnemosAPI.DTO.FiltersDTO;
 using MnemosAPI.DTO.UpdateRequestDto;
 using MnemosAPI.Services;
+using System.Linq;
 
 namespace MnemosAPI.Controllers
 {
@@ -30,51 +31,82 @@ namespace MnemosAPI.Controllers
         }
 
         [HttpGet("ByCustomer")]
-        public async Task<IEnumerable<CustomerGroupDto>> GetGroupedByCustomerAsync()
+        public async Task<ActionResult<IEnumerable<CustomerGroupDto>>> GetGroupedByCustomerAsync()
         {
             var result = await projectService.GetGroupedByCustomerAsync();
-            return result;
+            if (result is null || result.Count() == 0)
+            {
+                return NotFound("Nessun ruolo trovato");
+            }
+            return Ok(result);
         }
 
         [HttpGet("BySector")]
-        public async Task<IEnumerable<SectorGroupDto>> GetGroupedBySectorAsync()
+        public async Task<ActionResult<IEnumerable<SectorGroupDto>>> GetGroupedBySectorAsync()
         {
             var result = await projectService.GetGroupedBySectorAsync();
-            return result;
+            if (result is null || result.Count() == 0)
+            {
+                return NotFound("Nessun ruolo trovato");
+            }
+            return Ok(result);
+            
         }
 
         [HttpGet("ByRole")]
-        public async Task<IEnumerable<RoleGroupDto>> GetGroupedByRoleAsync()
+        public async Task<ActionResult<IEnumerable<RoleGroupDto>>> GetGroupedByRoleAsync()
         {
             var result = await projectService.GetGroupedByRoleAsync();
-            return result;
+            if(result is null || result.Count() == 0)
+            {
+                return NotFound("Nessun ruolo trovato");
+            }
+            return Ok(result);
         }
 
         [HttpGet("ByEndCustomer")]
-        public async Task<IEnumerable<EndCustomerGroupDto>> GetGroupedByEndCustomerAsync()
+        public async Task<ActionResult<IEnumerable<EndCustomerGroupDto>>> GetGroupedByEndCustomerAsync()
         {
             var result = await projectService.GetGroupedByEndCustomerAsync();
-            return result;
+            if (result is null || result.Count() == 0)
+            {
+                return NotFound("Nessun ruolo trovato");
+            }
+            return Ok(result); ;
         }
 
         [HttpGet("ByStartDate")]
-        public async Task<IEnumerable<GroupByDateDto>> GetGroupedByStartDateAsync()
+        public async Task<ActionResult<IEnumerable<GroupByDateDto>>> GetGroupedByStartDateAsync()
         {
-            return await projectService.GetGroupedByStartDateAsync();
+           var result = await projectService.GetGroupedByStartDateAsync();
+            if (result is null || result.Count() == 0)
+            {
+                return NotFound("Nessun ruolo trovato");
+            }
+            return Ok(result);
+
         }
 
         [HttpGet("Latest")]
-        public async Task<IEnumerable<ProjectDto>> GetLatestProjectsAsync([FromQuery] int count = 5)
+        public async Task<ActionResult<IEnumerable<ProjectDto>>> GetLatestProjectsAsync([FromQuery] int count = 5)
         {
-            return await projectService.GetLatestProjectsAsync(count);
+            var result = await projectService.GetLatestProjectsAsync(count);
+            if (result is null || result.Count() == 0)
+            {
+                return NotFound("Nessun ruolo trovato");
+            }
+            return Ok(result);
         }
 
-
-
         [HttpGet("ByActiveStatus")]
-        public async Task<IEnumerable<ProjectDto>> GetByActiveStatus()
+        public async Task<ActionResult<IEnumerable<ProjectDto>>> GetByActiveStatus()
         {
-            return await projectService.GetByInProgressStatusAsync();
+            var result = await projectService.GetByInProgressStatusAsync();
+            if (result is null || result.Count() == 0)
+            {
+                return NotFound("Nessun ruolo trovato");
+            }
+            return Ok(result);
         }
 
 
