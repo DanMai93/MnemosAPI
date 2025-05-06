@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MnemosAPI.Data;
 
@@ -11,9 +12,11 @@ using MnemosAPI.Data;
 namespace MnemosAPI.Migrations
 {
     [DbContext(typeof(MnemosDbContext))]
-    partial class MnemosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250506150819_Colonne e tabella bu")]
+    partial class Colonneetabellabu
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,8 +66,7 @@ namespace MnemosAPI.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -157,7 +159,6 @@ namespace MnemosAPI.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("GoalSolutions")
-                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
@@ -170,7 +171,6 @@ namespace MnemosAPI.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("Repository")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
@@ -181,7 +181,6 @@ namespace MnemosAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SolutionsImpact")
-                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 

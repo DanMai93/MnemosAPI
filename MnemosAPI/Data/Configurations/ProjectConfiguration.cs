@@ -21,6 +21,9 @@ namespace MnemosAPI.Data.Configurations
             entity.Property(e => e.Title)
                 .IsRequired()
                 .HasMaxLength(50);
+            entity.Property(e => e.Repository).IsRequired().HasMaxLength(1000);
+            entity.Property(e => e.GoalSolutions).IsRequired().HasMaxLength(2000);
+            entity.Property(e => e.SolutionsImpact).IsRequired().HasMaxLength(2000);
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.CustomerId)
@@ -44,6 +47,10 @@ namespace MnemosAPI.Data.Configurations
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Projects_Users");
+
+            entity.HasOne(d => d.BusinessUnit).WithMany(p => p.Projects)
+           .HasForeignKey(d => d.BusinessUnitId)
+           .HasConstraintName("FK_Projects_BusinessUnits");
 
             entity.HasMany(p => p.Skills)
                 .WithMany(s => s.Projects)

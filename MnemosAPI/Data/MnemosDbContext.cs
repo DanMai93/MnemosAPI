@@ -33,6 +33,8 @@ public partial class MnemosDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<BusinessUnit> BusinessUnits { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MnemosDbContext).Assembly);

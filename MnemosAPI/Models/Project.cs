@@ -46,6 +46,16 @@ public partial class Project
 
     public string Goals { get; set; }
 
+    public string Repository { get; set; }
+
+    public string GoalSolutions { get; set; }
+
+    public string SolutionsImpact { get; set; }
+
+    public int? BusinessUnitId { get; set; }
+
+    public virtual BusinessUnit BusinessUnit { get; set; }
+
     
 
 }
