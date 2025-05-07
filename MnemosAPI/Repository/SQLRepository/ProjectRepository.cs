@@ -19,16 +19,18 @@ namespace MnemosAPI.Repository.SQLRepository
         public async Task<List<Project>> GetAllWithForeignKeysAsync()
         {
             var projects = await dbContext.Projects
-                .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
+                .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(p => p.EndCustomer).Include(s => s.Skills)
+                .Include(p => p.BusinessUnit)
                 .ToListAsync();
 
             return projects;
         }
 
-        public async Task<Project> GetAllWithForeignKeysByIdAsync(int id)
+        public async Task<Project> GetByIdWithForeignKeysAsync(int id)
         {
             var project = await dbContext.Projects
                 .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
+                .Include(p => p.BusinessUnit)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return project;
@@ -39,6 +41,7 @@ namespace MnemosAPI.Repository.SQLRepository
             var latestProjects = await dbContext.Projects
                 .OrderByDescending(p => p.StartDate)
                 .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
+                .Include(p => p.BusinessUnit)
                 .Take(count) 
                 .ToListAsync();
 
@@ -50,6 +53,7 @@ namespace MnemosAPI.Repository.SQLRepository
         {
             var groupedByCustomer = await dbContext.Projects
                 .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
+                .Include(p => p.BusinessUnit)
                 .GroupBy(x => x.Customer)
                 .ToListAsync();
 
@@ -60,6 +64,7 @@ namespace MnemosAPI.Repository.SQLRepository
         {
             var groupedBySector = await dbContext.Projects
                 .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
+                .Include(p => p.BusinessUnit)
                 .GroupBy(x => x.Sector)
                 .ToListAsync();
 
@@ -70,6 +75,7 @@ namespace MnemosAPI.Repository.SQLRepository
         {
             var groupedByRole = await dbContext.Projects
                 .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
+                .Include(p => p.BusinessUnit)
                 .GroupBy(x => x.Role)
                 .ToListAsync();
 
@@ -80,6 +86,7 @@ namespace MnemosAPI.Repository.SQLRepository
         {
             var groupedByEndCustomer = await dbContext.Projects
                 .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
+                .Include(p => p.BusinessUnit)
                 .Where(x => x.EndCustomer != null)
                 .GroupBy(x => x.EndCustomer)
                 .ToListAsync();
@@ -91,6 +98,7 @@ namespace MnemosAPI.Repository.SQLRepository
         {
             var groupedByStartDate = await dbContext.Projects
                 .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
+                .Include(p => p.BusinessUnit)
                 .GroupBy(x => x.StartDate)
                 .ToListAsync();
 
@@ -101,6 +109,7 @@ namespace MnemosAPI.Repository.SQLRepository
         {
             var projectsInProgress = await dbContext.Projects
                 .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
+                .Include(p => p.BusinessUnit)
                 .Where(p => p.Status == StatusesEnum.INPROGRESS.ToString())
                 .ToListAsync();
 

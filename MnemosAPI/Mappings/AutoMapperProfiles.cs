@@ -45,6 +45,8 @@ namespace MnemosAPI.Mappings
             .ForMember(dest => dest.Scale, opt => opt.MapFrom(src => src.Scales));
 
             CreateMap<User, UserDto>().ReverseMap();
+
+            CreateMap<BusinessUnit, BusinessUnitDto>().ReverseMap();
         }
     }
 }

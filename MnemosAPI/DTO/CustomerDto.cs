@@ -7,7 +7,8 @@ namespace MnemosAPI.DTO
         public int Id { get; set; }
         public string Title { get; set; } = null!;
         public string? Notes { get; set; }
-        public ProjectDto Projects { get; set; }
+
+        public List<ProjectDto> Projects { get; set; }
 
     }
 }

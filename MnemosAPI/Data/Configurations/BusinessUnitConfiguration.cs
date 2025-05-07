@@ -12,7 +12,7 @@ namespace MnemosAPI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<BusinessUnit> entity)
         {
-            entity.Property(e => e.Name)
+            entity.Property(e => e.Title)
                 .IsRequired()
                 .HasMaxLength(50);
 
