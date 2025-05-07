@@ -35,6 +35,14 @@ public partial class MnemosDbContext : DbContext
 
     public virtual DbSet<BusinessUnit> BusinessUnits { get; set; }
 
+    public virtual DbSet<Architecture> Architectures { get; set; }
+
+    public virtual DbSet<WorkMethod> WorkMethods { get; set; }
+
+    public virtual DbSet<ManagementTool> ManagementTools { get; set; }
+
+    public virtual DbSet<SoftSkill> SoftSkills { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MnemosDbContext).Assembly);

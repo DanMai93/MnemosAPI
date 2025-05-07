@@ -37,6 +37,24 @@ namespace MnemosAPI.Migrations
                     b.ToTable("CategorySkill");
                 });
 
+            modelBuilder.Entity("MnemosAPI.Models.Architecture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Architectures");
+                });
+
             modelBuilder.Entity("MnemosAPI.Models.Area", b =>
                 {
                     b.Property<int>("Id")
@@ -126,6 +144,24 @@ namespace MnemosAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EndCustomer");
+                });
+
+            modelBuilder.Entity("MnemosAPI.Models.ManagementTool", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ManagementTools");
                 });
 
             modelBuilder.Entity("MnemosAPI.Models.Project", b =>
@@ -313,6 +349,24 @@ namespace MnemosAPI.Migrations
                     b.ToTable("Skill", (string)null);
                 });
 
+            modelBuilder.Entity("MnemosAPI.Models.SoftSkill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SoftSkills");
+                });
+
             modelBuilder.Entity("MnemosAPI.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -349,6 +403,54 @@ namespace MnemosAPI.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("MnemosAPI.Models.WorkMethod", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkMethods");
+                });
+
+            modelBuilder.Entity("ProjectArchitecture", b =>
+                {
+                    b.Property<int>("ArchitecturesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ArchitecturesId", "ProjectsId");
+
+                    b.HasIndex("ProjectsId");
+
+                    b.ToTable("ProjectArchitecture");
+                });
+
+            modelBuilder.Entity("ProjectManagementTool", b =>
+                {
+                    b.Property<int>("ManagementToolsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ManagementToolsId", "ProjectsId");
+
+                    b.HasIndex("ProjectsId");
+
+                    b.ToTable("ProjectManagementTool");
+                });
+
             modelBuilder.Entity("ProjectSkill", b =>
                 {
                     b.Property<int>("ProjectsId")
@@ -362,6 +464,36 @@ namespace MnemosAPI.Migrations
                     b.HasIndex("SkillsId");
 
                     b.ToTable("ProjectSkill");
+                });
+
+            modelBuilder.Entity("ProjectSoftSkill", b =>
+                {
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SoftSkillsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectsId", "SoftSkillsId");
+
+                    b.HasIndex("SoftSkillsId");
+
+                    b.ToTable("ProjectSoftSkill");
+                });
+
+            modelBuilder.Entity("ProjectWorkMethod", b =>
+                {
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkMethodsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectsId", "WorkMethodsId");
+
+                    b.HasIndex("WorkMethodsId");
+
+                    b.ToTable("ProjectWorkMethod");
                 });
 
             modelBuilder.Entity("CategorySkill", b =>
@@ -446,6 +578,36 @@ namespace MnemosAPI.Migrations
                     b.Navigation("Scale");
                 });
 
+            modelBuilder.Entity("ProjectArchitecture", b =>
+                {
+                    b.HasOne("MnemosAPI.Models.Architecture", null)
+                        .WithMany()
+                        .HasForeignKey("ArchitecturesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MnemosAPI.Models.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProjectManagementTool", b =>
+                {
+                    b.HasOne("MnemosAPI.Models.ManagementTool", null)
+                        .WithMany()
+                        .HasForeignKey("ManagementToolsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MnemosAPI.Models.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ProjectSkill", b =>
                 {
                     b.HasOne("MnemosAPI.Models.Project", null)
@@ -457,6 +619,36 @@ namespace MnemosAPI.Migrations
                     b.HasOne("MnemosAPI.Models.Skill", null)
                         .WithMany()
                         .HasForeignKey("SkillsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProjectSoftSkill", b =>
+                {
+                    b.HasOne("MnemosAPI.Models.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MnemosAPI.Models.SoftSkill", null)
+                        .WithMany()
+                        .HasForeignKey("SoftSkillsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProjectWorkMethod", b =>
+                {
+                    b.HasOne("MnemosAPI.Models.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MnemosAPI.Models.WorkMethod", null)
+                        .WithMany()
+                        .HasForeignKey("WorkMethodsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
