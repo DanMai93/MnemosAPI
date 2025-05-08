@@ -71,7 +71,7 @@ namespace MnemosAPI.Services
                 }
                 else
                 {
-                    throw new ArgumentException("Skill non trovata con id" + skillId);
+                    throw new ArgumentException("Skill non trovata con id " + skillId);
                 }
             }
 
@@ -85,7 +85,7 @@ namespace MnemosAPI.Services
                 }
                 else
                 {
-                    throw new ArgumentException("Architecture non trovata con id" + architectureId);
+                    throw new ArgumentException("Architecture non trovata con id " + architectureId);
                 }
             }
 
@@ -99,7 +99,7 @@ namespace MnemosAPI.Services
                 }
                 else
                 {
-                    throw new ArgumentException("Work method non trovato con id" + workMethodId);
+                    throw new ArgumentException("Work method non trovato con id " + workMethodId);
                 }
             }
 
@@ -114,7 +114,7 @@ namespace MnemosAPI.Services
                 }
                 else
                 {
-                    throw new ArgumentException("Management tool non trovato con id" + managementToolId);
+                    throw new ArgumentException("Management tool non trovato con id " + managementToolId);
                 }
             }
 
@@ -127,7 +127,7 @@ namespace MnemosAPI.Services
                     project.SoftSkills.Add(softSkill);
                 } else
                 {
-                    throw new ArgumentException("Soft skill non trovata con id" + softSkillId);
+                    throw new ArgumentException("Soft skill non trovata con id " + softSkillId);
                 }
             }
 
@@ -139,24 +139,28 @@ namespace MnemosAPI.Services
             {
                 Id = project.Id,
                 Title = project.Title,
-                Customer = new CustomerDto() { Id = project.Customer.Id, Title = project.Customer.Title, Notes = project.Customer.Notes },
-                EndCustomer = new EndCustomerDto() { Id = project.EndCustomer.Id, Title = project.EndCustomer.Title, Notes = project.EndCustomer.Notes },
+                Customer = _mapper.Map<CustomerDto>(project.Customer),
+                EndCustomer = _mapper.Map<EndCustomerDto>(project.EndCustomer),
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
                 Description = project.Description,
                 WorkOrder = project.WorkOrder,
-                Role = new RoleDto() { Title = project.Role.Title, Notes = project.Role.Notes },
-                Sector = new SectorDto() { Id = project.Sector.Id, Title = project.Sector.Title, Description = project.Sector.Description },
+                Role = _mapper.Map<RoleDto>(project.Role),
+                Sector = _mapper.Map<SectorDto>(project.Sector),
                 Skills = _mapper.Map<List<SkillDto>>(project.Skills),
                 JobCode = project.JobCode,
-                User = new UserDto() { DisplayName = project.User.DisplayName, FirstName = project.User.FirstName, LastName = project.User.LastName, UserName = project.User.UserName },
+                User = _mapper.Map<UserDto>(project.User),
                 Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
                 Status = Enum.Parse<StatusesEnum>(project.Status),
                 Goals = project.Goals,
                 Repository = project.Repository,
                 GoalSolutions = project.GoalSolutions,
                 SolutionsImpact = project.SolutionsImpact,
-                BusinessUnit = new BusinessUnitDto() { Id = project.BusinessUnit.Id, Title = project.BusinessUnit.Title }
+                BusinessUnit = _mapper.Map<BusinessUnitDto>(project.BusinessUnit),
+                Architectures = _mapper.Map<List<ArchitectureDto>>(project.Architectures),
+                WorkMethods = _mapper.Map<List<WorkMethodDto>>(project.WorkMethods),
+                ManagementTools = _mapper.Map<List<ManagementToolDto>>(project.ManagementTools),
+                SoftSkills = _mapper.Map<List<SoftSkillDto>>(project.SoftSkills)
             };
 
             return projectDto;
@@ -181,24 +185,24 @@ namespace MnemosAPI.Services
             {
                 Id = project.Id,
                 Title = project.Title,
-                Customer = new CustomerDto() { Id = project.Customer.Id, Title = project.Customer.Title, Notes = project.Customer.Notes },
-                EndCustomer = new EndCustomerDto() { Id = project.EndCustomer.Id, Title = project.EndCustomer.Title, Notes = project.EndCustomer.Notes },
+                Customer = _mapper.Map<CustomerDto>(project.Customer),
+                EndCustomer = _mapper.Map<EndCustomerDto>(project.EndCustomer),
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
                 Description = project.Description,
                 WorkOrder = project.WorkOrder,
-                Role = new RoleDto() { Title = project.Role.Title, Notes = project.Role.Notes },
-                Sector = new SectorDto() { Id = project.Sector.Id, Title = project.Sector.Title, Description = project.Sector.Description },
+                Role = _mapper.Map<RoleDto>(project.Role),
+                Sector =  _mapper.Map<SectorDto>(project.Sector),
                 Skills = _mapper.Map<List<SkillDto>>(project.Skills),
                 JobCode = project.JobCode,
-                User = new UserDto() { DisplayName = project.User.DisplayName, FirstName = project.User.FirstName, LastName = project.User.LastName, UserName = project.User.UserName },
+                User = _mapper.Map<UserDto>(project.User),
                 Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
                 Status = Enum.Parse<StatusesEnum>(project.Status),
                 Goals = project.Goals,
                 Repository = project.Repository,
                 GoalSolutions = project.GoalSolutions,
                 SolutionsImpact = project.SolutionsImpact,
-                BusinessUnit = new BusinessUnitDto() { Id = project.BusinessUnit.Id, Title = project.BusinessUnit.Title },
+                BusinessUnit = _mapper.Map<BusinessUnitDto>(project.BusinessUnit),
                 Architectures = _mapper.Map<List<ArchitectureDto>>(project.Architectures),
                 WorkMethods = _mapper.Map<List<WorkMethodDto>>(project.WorkMethods),
                 ManagementTools = _mapper.Map<List<ManagementToolDto>>(project.ManagementTools),
@@ -218,31 +222,32 @@ namespace MnemosAPI.Services
             foreach (var project in projectList)
             {
                 projectListDto.Add(new ProjectDto()
+
                 {
-                    Id = project.Id,
-                    Title = project.Title,
-                    Customer = new CustomerDto() { Id = project.Customer.Id, Title = project.Customer.Title, Notes = project.Customer.Notes },
-                    EndCustomer = new EndCustomerDto() { Id = project.EndCustomer.Id, Title = project.EndCustomer.Title, Notes = project.EndCustomer.Notes },
-                    StartDate = project.StartDate,
-                    EndDate = project.EndDate,
-                    Description = project.Description,
-                    WorkOrder = project.WorkOrder,
-                    Role = new RoleDto() { Title = project.Role.Title, Notes = project.Role.Notes },
-                    Sector = new SectorDto() { Id = project.Sector.Id, Title = project.Sector.Title, Description = project.Sector.Description },
-                    Skills = _mapper.Map<List<SkillDto>>(project.Skills),
-                    JobCode = project.JobCode,
-                    User = new UserDto() { DisplayName = project.User.DisplayName, FirstName = project.User.FirstName, LastName = project.User.LastName, UserName = project.User.UserName },
-                    Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
-                    Status = Enum.Parse<StatusesEnum>(project.Status),
-                    Goals = project.Goals,
-                    Repository = project.Repository,
-                    GoalSolutions = project.GoalSolutions,
-                    SolutionsImpact = project.SolutionsImpact,
-                    BusinessUnit = new BusinessUnitDto() { Id = project.BusinessUnit.Id, Title = project.BusinessUnit.Title },
-                    Architectures = _mapper.Map<List<ArchitectureDto>>(project.Architectures),
-                    WorkMethods = _mapper.Map<List<WorkMethodDto>>(project.WorkMethods),
-                    ManagementTools = _mapper.Map<List<ManagementToolDto>>(project.ManagementTools),
-                    SoftSkills = _mapper.Map<List<SoftSkillDto>>(project.SoftSkills)
+                Id = project.Id,
+                Title = project.Title,
+                Customer = _mapper.Map<CustomerDto>(project.Customer),
+                EndCustomer = _mapper.Map<EndCustomerDto>(project.EndCustomer),
+                StartDate = project.StartDate,
+                EndDate = project.EndDate,
+                Description = project.Description,
+                WorkOrder = project.WorkOrder,
+                Role = _mapper.Map<RoleDto>(project.Role),
+                Sector =  _mapper.Map<SectorDto>(project.Sector),
+                Skills = _mapper.Map<List<SkillDto>>(project.Skills),
+                JobCode = project.JobCode,
+                User = _mapper.Map<UserDto>(project.User),
+                Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
+                Status = Enum.Parse<StatusesEnum>(project.Status),
+                Goals = project.Goals,
+                Repository = project.Repository,
+                GoalSolutions = project.GoalSolutions,
+                SolutionsImpact = project.SolutionsImpact,
+                BusinessUnit = _mapper.Map<BusinessUnitDto>(project.BusinessUnit),
+                Architectures = _mapper.Map<List<ArchitectureDto>>(project.Architectures),
+                WorkMethods = _mapper.Map<List<WorkMethodDto>>(project.WorkMethods),
+                ManagementTools = _mapper.Map<List<ManagementToolDto>>(project.ManagementTools),
+                SoftSkills = _mapper.Map<List<SoftSkillDto>>(project.SoftSkills)
                 });
             }
 
@@ -262,25 +267,26 @@ namespace MnemosAPI.Services
             {
                 latestProjectsDto.Add(new ProjectDto
                 {
+                    Id = project.Id,
                     Title = project.Title,
-                    Customer = new CustomerDto { Id = project.Customer.Id, Title = project.Customer.Title, Notes = project.Customer.Notes },
-                    EndCustomer = new EndCustomerDto { Id = project.EndCustomer.Id, Title = project.EndCustomer.Title, Notes = project.EndCustomer.Notes },
+                    Customer = _mapper.Map<CustomerDto>(project.Customer),
+                    EndCustomer = _mapper.Map<EndCustomerDto>(project.EndCustomer),
                     StartDate = project.StartDate,
                     EndDate = project.EndDate,
                     Description = project.Description,
                     WorkOrder = project.WorkOrder,
-                    Role = new RoleDto { Title = project.Role.Title, Notes = project.Role.Notes },
-                    Sector = new SectorDto { Id = project.Sector.Id, Title = project.Sector.Title, Description = project.Sector.Description },
+                    Role = _mapper.Map<RoleDto>(project.Role),
+                    Sector = _mapper.Map<SectorDto>(project.Sector),
                     Skills = _mapper.Map<List<SkillDto>>(project.Skills),
                     JobCode = project.JobCode,
-                    User = new UserDto { DisplayName = project.User.DisplayName, FirstName = project.User.FirstName, LastName = project.User.LastName, UserName = project.User.UserName },
+                    User = _mapper.Map<UserDto>(project.User),
                     Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
                     Status = Enum.Parse<StatusesEnum>(project.Status),
                     Goals = project.Goals,
                     Repository = project.Repository,
                     GoalSolutions = project.GoalSolutions,
                     SolutionsImpact = project.SolutionsImpact,
-                    BusinessUnit = new BusinessUnitDto() { Id = project.BusinessUnit.Id, Title = project.BusinessUnit.Title },
+                    BusinessUnit = _mapper.Map<BusinessUnitDto>(project.BusinessUnit),
                     Architectures = _mapper.Map<List<ArchitectureDto>>(project.Architectures),
                     WorkMethods = _mapper.Map<List<WorkMethodDto>>(project.WorkMethods),
                     ManagementTools = _mapper.Map<List<ManagementToolDto>>(project.ManagementTools),
@@ -307,24 +313,24 @@ namespace MnemosAPI.Services
                     {
                         Id = projectFilter.Id,
                         Title = projectFilter.Title,
-                        Customer = new CustomerDto { Id = projectFilter.Customer.Id, Title = projectFilter.Customer.Title, Notes = projectFilter.Customer.Notes },
-                        EndCustomer = new EndCustomerDto { Id = projectFilter.EndCustomer.Id, Title = projectFilter.EndCustomer.Title, Notes = projectFilter.EndCustomer.Notes },
+                        Customer = _mapper.Map<CustomerDto>(projectFilter.Customer),
+                        EndCustomer = _mapper.Map<EndCustomerDto>(projectFilter.EndCustomer),
                         StartDate = projectFilter.StartDate,
                         EndDate = projectFilter.EndDate,
                         Description = projectFilter.Description,
                         WorkOrder = projectFilter.WorkOrder,
-                        Role = new RoleDto() { Title = projectFilter.Role.Title, Notes = projectFilter.Role.Notes },
-                        Sector = new SectorDto() { Id = projectFilter.Sector.Id, Title = projectFilter.Sector.Title, Description = projectFilter.Sector.Description },
+                        Role = _mapper.Map<RoleDto>(projectFilter.Role),
+                        Sector = _mapper.Map<SectorDto>(projectFilter.Sector),
                         Skills = _mapper.Map<List<SkillDto>>(projectFilter.Skills),
                         JobCode = projectFilter.JobCode,
-                        User = new UserDto() { DisplayName = projectFilter.User.DisplayName, FirstName = projectFilter.User.FirstName, LastName = projectFilter.User.LastName, UserName = projectFilter.User.UserName },
+                        User = _mapper.Map<UserDto>(projectFilter.User),
                         Difficulty = Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty),
                         Status = Enum.Parse<StatusesEnum>(projectFilter.Status),
                         Goals = projectFilter.Goals,
                         Repository = projectFilter.Repository,
                         GoalSolutions = projectFilter.GoalSolutions,
                         SolutionsImpact = projectFilter.SolutionsImpact,
-                        BusinessUnit = new BusinessUnitDto() { Id = projectFilter.BusinessUnit.Id, Title = projectFilter.BusinessUnit.Title },
+                        BusinessUnit = _mapper.Map<BusinessUnitDto>(projectFilter.BusinessUnit),
                         Architectures = _mapper.Map<List<ArchitectureDto>>(projectFilter.Architectures),
                         WorkMethods = _mapper.Map<List<WorkMethodDto>>(projectFilter.WorkMethods),
                         ManagementTools = _mapper.Map<List<ManagementToolDto>>(projectFilter.ManagementTools),
@@ -350,24 +356,24 @@ namespace MnemosAPI.Services
                     {
                         Id = projectFilter.Id,
                         Title = projectFilter.Title,
-                        Customer = new CustomerDto { Id = projectFilter.Customer.Id, Title = projectFilter.Customer.Title, Notes = projectFilter.Customer.Notes },
-                        EndCustomer = new EndCustomerDto { Id = projectFilter.EndCustomer.Id, Title = projectFilter.EndCustomer.Title, Notes = projectFilter.EndCustomer.Notes },
+                        Customer = _mapper.Map<CustomerDto>(projectFilter.Customer),
+                        EndCustomer = _mapper.Map<EndCustomerDto>(projectFilter.EndCustomer),
                         StartDate = projectFilter.StartDate,
                         EndDate = projectFilter.EndDate,
                         Description = projectFilter.Description,
                         WorkOrder = projectFilter.WorkOrder,
-                        Role = new RoleDto() { Title = projectFilter.Role.Title, Notes = projectFilter.Role.Notes },
-                        Sector = new SectorDto() { Id = projectFilter.Sector.Id, Title = projectFilter.Sector.Title, Description = projectFilter.Sector.Description },
+                        Role = _mapper.Map<RoleDto>(projectFilter.Role),
+                        Sector = _mapper.Map<SectorDto>(projectFilter.Sector),
                         Skills = _mapper.Map<List<SkillDto>>(projectFilter.Skills),
                         JobCode = projectFilter.JobCode,
-                        User = new UserDto() { DisplayName = projectFilter.User.DisplayName, FirstName = projectFilter.User.FirstName, LastName = projectFilter.User.LastName, UserName = projectFilter.User.UserName },
+                        User = _mapper.Map<UserDto>(projectFilter.User),
                         Difficulty = Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty),
                         Status = Enum.Parse<StatusesEnum>(projectFilter.Status),
                         Goals = projectFilter.Goals,
                         Repository = projectFilter.Repository,
                         GoalSolutions = projectFilter.GoalSolutions,
                         SolutionsImpact = projectFilter.SolutionsImpact,
-                        BusinessUnit = new BusinessUnitDto() { Id = projectFilter.BusinessUnit.Id, Title = projectFilter.BusinessUnit.Title },
+                        BusinessUnit = _mapper.Map<BusinessUnitDto>(projectFilter.BusinessUnit),
                         Architectures = _mapper.Map<List<ArchitectureDto>>(projectFilter.Architectures),
                         WorkMethods = _mapper.Map<List<WorkMethodDto>>(projectFilter.WorkMethods),
                         ManagementTools = _mapper.Map<List<ManagementToolDto>>(projectFilter.ManagementTools),
@@ -393,24 +399,24 @@ namespace MnemosAPI.Services
                     {
                         Id = projectFilter.Id,
                         Title = projectFilter.Title,
-                        Customer = new CustomerDto { Id = projectFilter.Customer.Id, Title = projectFilter.Customer.Title, Notes = projectFilter.Customer.Notes },
-                        EndCustomer = new EndCustomerDto { Id = projectFilter.EndCustomer.Id, Title = projectFilter.EndCustomer.Title, Notes = projectFilter.EndCustomer.Notes },
+                        Customer = _mapper.Map<CustomerDto>(projectFilter.Customer),
+                        EndCustomer = _mapper.Map<EndCustomerDto>(projectFilter.EndCustomer),
                         StartDate = projectFilter.StartDate,
                         EndDate = projectFilter.EndDate,
                         Description = projectFilter.Description,
                         WorkOrder = projectFilter.WorkOrder,
-                        Role = new RoleDto() { Title = projectFilter.Role.Title, Notes = projectFilter.Role.Notes },
-                        Sector = new SectorDto() { Id = projectFilter.Sector.Id, Title = projectFilter.Sector.Title, Description = projectFilter.Sector.Description },
+                        Role = _mapper.Map<RoleDto>(projectFilter.Role),
+                        Sector = _mapper.Map<SectorDto>(projectFilter.Sector),
                         Skills = _mapper.Map<List<SkillDto>>(projectFilter.Skills),
                         JobCode = projectFilter.JobCode,
-                        User = new UserDto() { DisplayName = projectFilter.User.DisplayName, FirstName = projectFilter.User.FirstName, LastName = projectFilter.User.LastName, UserName = projectFilter.User.UserName },
+                        User = _mapper.Map<UserDto>(projectFilter.User),
                         Difficulty = Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty),
                         Status = Enum.Parse<StatusesEnum>(projectFilter.Status),
                         Goals = projectFilter.Goals,
                         Repository = projectFilter.Repository,
                         GoalSolutions = projectFilter.GoalSolutions,
                         SolutionsImpact = projectFilter.SolutionsImpact,
-                        BusinessUnit = new BusinessUnitDto() { Id = projectFilter.BusinessUnit.Id, Title = projectFilter.BusinessUnit.Title },
+                        BusinessUnit = _mapper.Map<BusinessUnitDto>(projectFilter.BusinessUnit),
                         Architectures = _mapper.Map<List<ArchitectureDto>>(projectFilter.Architectures),
                         WorkMethods = _mapper.Map<List<WorkMethodDto>>(projectFilter.WorkMethods),
                         ManagementTools = _mapper.Map<List<ManagementToolDto>>(projectFilter.ManagementTools),
@@ -439,24 +445,24 @@ namespace MnemosAPI.Services
                     {
                         Id = projectFilter.Id,
                         Title = projectFilter.Title,
-                        Customer = new CustomerDto { Id = projectFilter.Customer.Id, Title = projectFilter.Customer.Title, Notes = projectFilter.Customer.Notes },
-                        EndCustomer = new EndCustomerDto { Id = projectFilter.EndCustomer.Id, Title = projectFilter.EndCustomer.Title, Notes = projectFilter.EndCustomer.Notes },
+                        Customer = _mapper.Map<CustomerDto>(projectFilter.Customer),
+                        EndCustomer = _mapper.Map<EndCustomerDto>(projectFilter.EndCustomer),
                         StartDate = projectFilter.StartDate,
                         EndDate = projectFilter.EndDate,
                         Description = projectFilter.Description,
                         WorkOrder = projectFilter.WorkOrder,
-                        Role = new RoleDto() { Title = projectFilter.Role.Title, Notes = projectFilter.Role.Notes },
-                        Sector = new SectorDto() { Id = projectFilter.Sector.Id, Title = projectFilter.Sector.Title, Description = projectFilter.Sector.Description },
+                        Role = _mapper.Map<RoleDto>(projectFilter.Role),
+                        Sector = _mapper.Map<SectorDto>(projectFilter.Sector),
                         Skills = _mapper.Map<List<SkillDto>>(projectFilter.Skills),
                         JobCode = projectFilter.JobCode,
-                        User = new UserDto() { DisplayName = projectFilter.User.DisplayName, FirstName = projectFilter.User.FirstName, LastName = projectFilter.User.LastName, UserName = projectFilter.User.UserName },
+                        User = _mapper.Map<UserDto>(projectFilter.User),
                         Difficulty = Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty),
                         Status = Enum.Parse<StatusesEnum>(projectFilter.Status),
                         Goals = projectFilter.Goals,
                         Repository = projectFilter.Repository,
                         GoalSolutions = projectFilter.GoalSolutions,
                         SolutionsImpact = projectFilter.SolutionsImpact,
-                        BusinessUnit = new BusinessUnitDto() { Id = projectFilter.BusinessUnit.Id, Title = projectFilter.BusinessUnit.Title },
+                        BusinessUnit = _mapper.Map<BusinessUnitDto>(projectFilter.BusinessUnit),
                         Architectures = _mapper.Map<List<ArchitectureDto>>(projectFilter.Architectures),
                         WorkMethods = _mapper.Map<List<WorkMethodDto>>(projectFilter.WorkMethods),
                         ManagementTools = _mapper.Map<List<ManagementToolDto>>(projectFilter.ManagementTools),
@@ -479,24 +485,24 @@ namespace MnemosAPI.Services
                 {
                     Id = project.Id,
                     Title = project.Title,
-                    Customer = new CustomerDto { Id = project.Customer.Id, Title = project.Customer.Title, Notes = project.Customer.Notes },
-                    EndCustomer = new EndCustomerDto { Id = project.EndCustomer.Id, Title = project.EndCustomer.Title, Notes = project.EndCustomer.Notes },
+                    Customer = _mapper.Map<CustomerDto>(project.Customer),
+                    EndCustomer = _mapper.Map<EndCustomerDto>(project.EndCustomer),
                     StartDate = project.StartDate,
                     EndDate = project.EndDate,
                     Description = project.Description,
                     WorkOrder = project.WorkOrder,
-                    Role = new RoleDto() { Title = project.Role.Title, Notes = project.Role.Notes },
-                    Sector = new SectorDto() { Id = project.Sector.Id, Title = project.Sector.Title, Description = project.Sector.Description },
+                    Role = _mapper.Map<RoleDto>(project.Role),
+                    Sector = _mapper.Map<SectorDto>(project.Sector),
                     Skills = _mapper.Map<List<SkillDto>>(project.Skills),
                     JobCode = project.JobCode,
-                    User = new UserDto() { DisplayName = project.User.DisplayName, FirstName = project.User.FirstName, LastName = project.User.LastName, UserName = project.User.UserName },
+                    User = _mapper.Map<UserDto>(project.User),
                     Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
                     Status = Enum.Parse<StatusesEnum>(project.Status),
                     Goals = project.Goals,
                     Repository = project.Repository,
                     GoalSolutions = project.GoalSolutions,
                     SolutionsImpact = project.SolutionsImpact,
-                    BusinessUnit = new BusinessUnitDto() { Id = project.BusinessUnit.Id, Title = project.BusinessUnit.Title },
+                    BusinessUnit = _mapper.Map<BusinessUnitDto>(project.BusinessUnit),
                     Architectures = _mapper.Map<List<ArchitectureDto>>(project.Architectures),
                     WorkMethods = _mapper.Map<List<WorkMethodDto>>(project.WorkMethods),
                     ManagementTools = _mapper.Map<List<ManagementToolDto>>(project.ManagementTools),
@@ -526,24 +532,24 @@ namespace MnemosAPI.Services
                 {
                     Id = project.Id,
                     Title = project.Title,
-                    Customer = new CustomerDto { Id = project.Customer.Id, Title = project.Customer.Title, Notes = project.Customer.Notes },
-                    EndCustomer = new EndCustomerDto { Id = project.EndCustomer.Id, Title = project.EndCustomer.Title, Notes = project.EndCustomer.Notes },
+                    Customer = _mapper.Map<CustomerDto>(project.Customer),
+                    EndCustomer = _mapper.Map<EndCustomerDto>(project.EndCustomer),
                     StartDate = project.StartDate,
                     EndDate = project.EndDate,
                     Description = project.Description,
                     WorkOrder = project.WorkOrder,
-                    Role = new RoleDto() { Title = project.Role.Title, Notes = project.Role.Notes },
-                    Sector = new SectorDto() { Id = project.Sector.Id, Title = project.Sector.Title, Description = project.Sector.Description },
+                    Role = _mapper.Map<RoleDto>(project.Role),
+                    Sector = _mapper.Map<SectorDto>(project.Sector),
                     Skills = _mapper.Map<List<SkillDto>>(project.Skills),
                     JobCode = project.JobCode,
-                    User = new UserDto() { DisplayName = project.User.DisplayName, FirstName = project.User.FirstName, LastName = project.User.LastName, UserName = project.User.UserName },
+                    User = _mapper.Map<UserDto>(project.User),
                     Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
                     Status = Enum.Parse<StatusesEnum>(project.Status),
                     Goals = project.Goals,
                     Repository = project.Repository,
                     GoalSolutions = project.GoalSolutions,
                     SolutionsImpact = project.SolutionsImpact,
-                    BusinessUnit = new BusinessUnitDto() { Id = project.BusinessUnit.Id, Title = project.BusinessUnit.Title },
+                    BusinessUnit = _mapper.Map<BusinessUnitDto>(project.BusinessUnit),
                     Architectures = _mapper.Map<List<ArchitectureDto>>(project.Architectures),
                     WorkMethods = _mapper.Map<List<WorkMethodDto>>(project.WorkMethods),
                     ManagementTools = _mapper.Map<List<ManagementToolDto>>(project.ManagementTools),
