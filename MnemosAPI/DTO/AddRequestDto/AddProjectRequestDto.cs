@@ -25,6 +25,14 @@ namespace MnemosAPI.DTO.AddRequestDto
 
         public int[] Skills { get; set; }
 
+        public int[] Architectures { get; set; }
+
+        public int[] WorkMethods { get; set; }
+
+        public int[] ManagementTools { get; set; }
+
+        public int[] SoftSkills { get; set; }
+
         public string? JobCode { get; set; }
 
         public int UserId { get; set; }

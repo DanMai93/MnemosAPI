@@ -22,6 +22,14 @@ namespace MnemosAPI.DTO
 
         public List<SkillDto> Skills { get; set; }
 
+        public List<ArchitectureDto> Architectures { get; set; }
+
+        public List<ManagementToolDto> ManagementTools { get; set; }
+
+        public List<WorkMethodDto> WorkMethods { get; set; }
+
+        public List<SoftSkillDto> SoftSkills { get; set; }
+
         public RoleDto? Role { get; set; }
 
         public SectorDto? Sector { get; set; }

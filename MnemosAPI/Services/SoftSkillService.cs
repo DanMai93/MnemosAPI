@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MnemosAPI.DTO;
 using MnemosAPI.Repository;
+using MnemosAPI.Repository.SQLRepository;
 
 namespace MnemosAPI.Services
 {
@@ -19,6 +20,12 @@ namespace MnemosAPI.Services
         {
             var softSkillsList = await _softSkillRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<SoftSkillDto>>(softSkillsList);
+        }
+
+        public async Task<SoftSkillDto> GetSoftSkillAsync(int id)
+        {
+            var softSkill = await _softSkillRepository.GetByIdAsync(id);
+            return _mapper.Map<SoftSkillDto>(softSkill);
         }
     }
 }

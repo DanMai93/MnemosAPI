@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MnemosAPI.DTO;
 using MnemosAPI.Repository;
+using MnemosAPI.Repository.SQLRepository;
 
 namespace MnemosAPI.Services
 {
@@ -19,6 +20,12 @@ namespace MnemosAPI.Services
         {
             var managementToolList = await _managementToolRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<ManagementToolDto>>(managementToolList);
+        }
+
+        public async Task<ManagementToolDto> GetManagementToolAsync(int id)
+        {
+            var managementTool = await _managementToolRepository.GetByIdAsync(id);
+            return _mapper.Map<ManagementToolDto>(managementTool);
         }
     }
 }

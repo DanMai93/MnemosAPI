@@ -20,8 +20,8 @@ namespace MnemosAPI.Mappings
                 //.ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Projects));
             CreateMap<CustomerGroupDto, Customer>().ReverseMap();
 
-            CreateMap<EndCustomer, EndCustomerDto>().ReverseMap()
-                .ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Projects));
+            CreateMap<EndCustomer, EndCustomerDto>().ReverseMap();
+      
             CreateMap<EndCustomer, EndCustomerGroupDto>().ReverseMap();
 
             CreateMap<Project, ProjectDto>().ReverseMap();

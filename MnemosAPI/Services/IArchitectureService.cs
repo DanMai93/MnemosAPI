@@ -5,5 +5,7 @@ namespace MnemosAPI.Services
     public interface IArchitectureService
     {
         Task<IEnumerable<ArchitectureDto>> GetArchitecturesAsync();
+
+        Task<ArchitectureDto> GetArchitectureAsync(int id);
     }
 }

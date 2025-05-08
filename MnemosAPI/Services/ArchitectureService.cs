@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MnemosAPI.DTO;
 using MnemosAPI.Repository;
+using MnemosAPI.Repository.SQLRepository;
 
 namespace MnemosAPI.Services
 {
@@ -20,5 +21,11 @@ namespace MnemosAPI.Services
             var architectureList = await _architectureRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<ArchitectureDto>>(architectureList);
         }
+        public async Task<ArchitectureDto> GetArchitectureAsync(int id)
+        {
+            var architecture = await  _architectureRepository.GetByIdAsync(id);
+            return _mapper.Map<ArchitectureDto>(architecture);
+        }
+
     }
 }

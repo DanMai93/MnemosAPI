@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MnemosAPI.DTO;
 using MnemosAPI.Repository;
+using MnemosAPI.Repository.SQLRepository;
 
 namespace MnemosAPI.Services
 {
@@ -19,6 +20,12 @@ namespace MnemosAPI.Services
         {
             var workMethodList = await _workMethodRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<WorkMethodDto>>(workMethodList);
+        }
+
+        public async Task<WorkMethodDto> GetWorkMethodAsync(int id)
+        {
+            var workMethod = await _workMethodRepository.GetByIdAsync(id);
+            return _mapper.Map<WorkMethodDto>(workMethod);
         }
     }
 }
