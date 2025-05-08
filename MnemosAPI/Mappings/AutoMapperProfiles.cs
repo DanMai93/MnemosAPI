@@ -16,8 +16,8 @@ namespace MnemosAPI.Mappings
             CreateMap<Category, CategoryDto>().ReverseMap()
                 .ForMember(dest => dest.Skills, opt => opt.MapFrom(src => src.Skills));
 
-            CreateMap<Customer, CustomerDto>().ReverseMap()
-                .ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Projects));
+            CreateMap<Customer, CustomerDto>().ReverseMap();
+                //.ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Projects));
             CreateMap<CustomerGroupDto, Customer>().ReverseMap();
 
             CreateMap<EndCustomer, EndCustomerDto>().ReverseMap()
@@ -47,6 +47,15 @@ namespace MnemosAPI.Mappings
             CreateMap<User, UserDto>().ReverseMap();
 
             CreateMap<BusinessUnit, BusinessUnitDto>().ReverseMap();
+
+            CreateMap<Architecture, ArchitectureDto>().ReverseMap();
+
+            CreateMap<WorkMethod, WorkMethodDto>().ReverseMap();
+
+            CreateMap<ManagementTool, ManagementToolDto>().ReverseMap();
+
+            CreateMap<SoftSkill, SoftSkillDto>().ReverseMap();
+
         }
     }
 }
