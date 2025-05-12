@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MnemosAPI.DTO;
 using MnemosAPI.DTO.FiltersDTO;
+using MnemosAPI.DTO.UpdateRequestDto;
 using MnemosAPI.Models;
 using MnemosAPI.Services;
 
@@ -17,6 +18,7 @@ namespace MnemosAPI.Repository
         Task<List<Project>> GetAllWithForeignKeysAsync();
         Task<Project> GetByIdWithForeignKeysAsync(int id);
         Task<List<Project>> GetByInProgressStatusAsync();
+        Task<int> UpdateProjectAsync(int id, Project project);
 
     }
 

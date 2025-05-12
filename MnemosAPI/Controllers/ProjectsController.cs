@@ -6,6 +6,7 @@ using MnemosAPI.DTO.FiltersDTO;
 using MnemosAPI.DTO.UpdateRequestDto;
 using MnemosAPI.Services;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MnemosAPI.Controllers
 {
@@ -153,8 +154,9 @@ namespace MnemosAPI.Controllers
 
         // DELETE: api/Projects/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteProject([FromRoute] int id)
+        public async Task<IActionResult> DeleteProject([FromRoute] int id)
         {
+            await projectService.DeleteProjectAsync(id);
             return Ok();
         }
     }

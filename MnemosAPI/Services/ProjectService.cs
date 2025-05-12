@@ -24,10 +24,12 @@ namespace MnemosAPI.Services
         private readonly IWorkMethodRepository _workMethodRepository;
         private readonly IManagementToolRepository _managementToolRepository;
         private readonly ISoftSkillRepository _softSkillRepository;
+       
         private readonly IMapper _mapper;
 
         public ProjectService(IProjectRepository projectRepository, ISkillRepository skillRepository, IArchitectureRepository architectureRepository,
-            IWorkMethodRepository workMethodRepository, IManagementToolRepository managementToolRepository, ISoftSkillRepository softSkillRepository, IMapper mapper)
+            IWorkMethodRepository workMethodRepository, IManagementToolRepository managementToolRepository, ISoftSkillRepository softSkillRepository,
+            IMapper mapper)
         {
             _projectRepository = projectRepository;
             _skillRepository = skillRepository;
@@ -131,36 +133,36 @@ namespace MnemosAPI.Services
                 }
             }
 
-            project = await _projectRepository.AddAsync(project);
+            await _projectRepository.AddAsync(project);
 
             var addedProject = await _projectRepository.GetByIdWithForeignKeysAsync(project.Id);
 
             var projectDto = new ProjectDto()
             {
-                Id = project.Id,
-                Title = project.Title,
-                Customer = _mapper.Map<CustomerDto>(project.Customer),
-                EndCustomer = _mapper.Map<EndCustomerDto>(project.EndCustomer),
-                StartDate = project.StartDate,
-                EndDate = project.EndDate,
-                Description = project.Description,
-                WorkOrder = project.WorkOrder,
-                Role = _mapper.Map<RoleDto>(project.Role),
-                Sector = _mapper.Map<SectorDto>(project.Sector),
-                Skills = _mapper.Map<List<SkillDto>>(project.Skills),
-                JobCode = project.JobCode,
-                User = _mapper.Map<UserDto>(project.User),
-                Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
-                Status = Enum.Parse<StatusesEnum>(project.Status),
-                Goals = project.Goals,
-                Repository = project.Repository,
-                GoalSolutions = project.GoalSolutions,
-                SolutionsImpact = project.SolutionsImpact,
-                BusinessUnit = _mapper.Map<BusinessUnitDto>(project.BusinessUnit),
-                Architectures = _mapper.Map<List<ArchitectureDto>>(project.Architectures),
-                WorkMethods = _mapper.Map<List<WorkMethodDto>>(project.WorkMethods),
-                ManagementTools = _mapper.Map<List<ManagementToolDto>>(project.ManagementTools),
-                SoftSkills = _mapper.Map<List<SoftSkillDto>>(project.SoftSkills)
+                Id = addedProject.Id,
+                Title = addedProject.Title,
+                Customer = _mapper.Map<CustomerDto>(addedProject.Customer),
+                EndCustomer = _mapper.Map<EndCustomerDto>(addedProject.EndCustomer),
+                StartDate = addedProject.StartDate,
+                EndDate = addedProject.EndDate,
+                Description = addedProject.Description,
+                WorkOrder = addedProject.WorkOrder,
+                Role = _mapper.Map<RoleDto>(addedProject.Role),
+                Sector = _mapper.Map<SectorDto>(addedProject.Sector),
+                Skills = _mapper.Map<List<SkillDto>>(addedProject.Skills),
+                JobCode = addedProject.JobCode,
+                User = _mapper.Map<UserDto>(addedProject.User),
+                Difficulty = Enum.Parse<DifficultiesEnum>(addedProject.Difficulty),
+                Status = Enum.Parse<StatusesEnum>(addedProject.Status),
+                Goals = addedProject.Goals,
+                Repository = addedProject.Repository,
+                GoalSolutions = addedProject.GoalSolutions,
+                SolutionsImpact = addedProject.SolutionsImpact,
+                BusinessUnit = _mapper.Map<BusinessUnitDto>(addedProject.BusinessUnit),
+                Architectures = _mapper.Map<List<ArchitectureDto>>(addedProject.Architectures),
+                WorkMethods = _mapper.Map<List<WorkMethodDto>>(addedProject.WorkMethods),
+                ManagementTools = _mapper.Map<List<ManagementToolDto>>(addedProject.ManagementTools),
+                SoftSkills = _mapper.Map<List<SoftSkillDto>>(addedProject.SoftSkills)
             };
 
             return projectDto;
@@ -516,8 +518,126 @@ namespace MnemosAPI.Services
 
         public async Task<ProjectDto> UpdateProjectAsync(int projectId, UpdateProjectRequestDto updateProjectRequestDto)
         {
-            await UpdateProjectAsync(projectId, updateProjectRequestDto);
-            return null;
+
+            var existingProject = await _projectRepository.GetByIdWithForeignKeysAsync(projectId);
+
+            if (existingProject == null) 
+            {
+                throw new ArgumentException("Progetto non trovato con id " + projectId);
+            }
+
+            var project = new Project
+            {
+                Title = updateProjectRequestDto.Title,
+                CustomerId = updateProjectRequestDto.CustomerId,
+                EndCustomerId = updateProjectRequestDto.EndCustomerId,
+                StartDate = updateProjectRequestDto.StartDate,
+                EndDate = updateProjectRequestDto.EndDate,
+                Description = updateProjectRequestDto.Description,
+                WorkOrder = updateProjectRequestDto.WorkOrder,
+                RoleId = updateProjectRequestDto.RoleId,
+                SectorId = updateProjectRequestDto.SectorId,
+                JobCode = updateProjectRequestDto.JobCode,
+                UserId = updateProjectRequestDto.UserId,
+                Difficulty = updateProjectRequestDto.Difficulty.ToString(),
+                Status = updateProjectRequestDto.Status.ToString(),
+                Goals = updateProjectRequestDto.Goals,
+                Repository = updateProjectRequestDto.Repository,
+                GoalSolutions = updateProjectRequestDto.GoalSolutions,
+                SolutionsImpact = updateProjectRequestDto.SolutionsImpact,
+                BusinessUnitId = updateProjectRequestDto.BusinessUnitId
+            };
+
+            foreach (var skillId in updateProjectRequestDto.Skills) 
+            {
+                var skill = await _skillRepository.GetByIdAsync(skillId);
+
+                if (skill == null)
+                {
+                    throw new ArgumentException("Skill non trovata con id " + skillId);                
+                }
+                  project.Skills.Add(skill);       
+            }
+
+            foreach (var architectureId in updateProjectRequestDto.Architectures)
+            {
+                var architecture = await _architectureRepository.GetByIdAsync(architectureId);
+
+                if (architecture == null)
+                {
+                    throw new ArgumentException("Architettura non trovata con id " + architectureId);
+                }
+
+                project.Architectures.Add(architecture);
+            }
+
+            foreach (var workMethodId in updateProjectRequestDto.WorkMethods)
+            {
+                var workMethod = await _workMethodRepository.GetByIdAsync(workMethodId);
+
+                if (workMethod == null)
+                {
+                    throw new ArgumentException("WorkMethod non trovato con id " + workMethod);
+                }
+                project.WorkMethods.Add(workMethod);
+            }
+
+            foreach (var managementToolId in updateProjectRequestDto.ManagementTools)
+            {
+                var managementTool = await _managementToolRepository.GetByIdAsync(managementToolId);
+
+                if (managementTool == null)
+                {
+                    throw new ArgumentException("ManagementTool non trovato con id " + managementToolId);
+                }
+                project.ManagementTools.Add(managementTool);
+            }
+
+            foreach (var softSkillId in updateProjectRequestDto.SoftSkills)
+            {
+                var softSkill = await _softSkillRepository.GetByIdAsync(softSkillId);
+
+                if (softSkill == null)
+                {
+                    throw new ArgumentException("Soft skill non trovata con id " + softSkillId);
+                }
+                project.SoftSkills.Add(softSkill);
+            }
+
+            var projectToUpdateId = await _projectRepository.UpdateProjectAsync(projectId, project);
+
+            var updatedProject = await _projectRepository.GetByIdWithForeignKeysAsync(projectToUpdateId);
+
+            var projectDto = new ProjectDto()
+            {
+                Id = updatedProject.Id,
+                Title = updatedProject.Title,
+                Customer = _mapper.Map<CustomerDto>(updatedProject.Customer),
+                EndCustomer = _mapper.Map<EndCustomerDto>(updatedProject.EndCustomer),
+                StartDate = updatedProject.StartDate,
+                EndDate = updatedProject.EndDate,
+                Description = updatedProject.Description,
+                WorkOrder = updatedProject.WorkOrder,
+                Role = _mapper.Map<RoleDto>(updatedProject.Role),
+                Sector = _mapper.Map<SectorDto>(updatedProject.Sector),
+                Skills = _mapper.Map<List<SkillDto>>(updatedProject.Skills),
+                JobCode = updatedProject.JobCode,
+                User = _mapper.Map<UserDto>(updatedProject.User),
+                Difficulty = Enum.Parse<DifficultiesEnum>(updatedProject.Difficulty),
+                Status = Enum.Parse<StatusesEnum>(updatedProject.Status),
+                Goals = updatedProject.Goals,
+                Repository = updatedProject.Repository,
+                GoalSolutions = updatedProject.GoalSolutions,
+                SolutionsImpact = updatedProject.SolutionsImpact,
+                BusinessUnit = _mapper.Map<BusinessUnitDto>(updatedProject.BusinessUnit),
+                Architectures = _mapper.Map<List<ArchitectureDto>>(updatedProject.Architectures),
+                WorkMethods = _mapper.Map<List<WorkMethodDto>>(updatedProject.WorkMethods),
+                ManagementTools = _mapper.Map<List<ManagementToolDto>>(updatedProject.ManagementTools),
+                SoftSkills = _mapper.Map<List<SoftSkillDto>>(updatedProject.SoftSkills)
+            };
+
+            return projectDto;
+
         }
 
         public async Task<IEnumerable<ProjectDto>> GetByInProgressStatusAsync()

@@ -4,7 +4,6 @@ namespace MnemosAPI.DTO.UpdateRequestDto
 {
     public class UpdateProjectRequestDto
     {
-        //    public int Id { get; set; }
         public string Title { get; set; }
 
         public int CustomerId { get; set; }
@@ -13,7 +12,7 @@ namespace MnemosAPI.DTO.UpdateRequestDto
 
         public DateOnly StartDate { get; set; }
 
-        public DateOnly EndDate { get; set; }
+        public DateOnly? EndDate { get; set; }
 
         public string? Description { get; set; }
 
@@ -24,6 +23,14 @@ namespace MnemosAPI.DTO.UpdateRequestDto
         public int SectorId { get; set; }
 
         public int[] Skills { get; set; }
+
+        public int[] Architectures { get; set; }
+
+        public int[] WorkMethods { get; set; }
+
+        public int[] ManagementTools { get; set; }
+
+        public int[] SoftSkills { get; set; }
 
         public string? JobCode { get; set; }
 

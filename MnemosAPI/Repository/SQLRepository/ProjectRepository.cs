@@ -7,6 +7,7 @@ using MnemosAPI.Models;
 using MnemosAPI.Utilities;
 using NuGet.Protocol;
 using MnemosAPI.Services;
+using MnemosAPI.DTO.UpdateRequestDto;
 
 namespace MnemosAPI.Repository.SQLRepository
 {
@@ -114,6 +115,45 @@ namespace MnemosAPI.Repository.SQLRepository
                 .ToListAsync();
 
             return projectsInProgress;
+        }
+
+        public async Task<int> UpdateProjectAsync(int id, Project project)
+        {
+            var existingProject = await dbContext.Projects.FirstOrDefaultAsync(x => x.Id == id);
+
+            if(existingProject == null)
+            {
+                throw new ArgumentException("Progetto non trovato" );
+            }
+
+            existingProject.Title = project.Title;
+            existingProject.CustomerId = project.CustomerId;
+            existingProject.EndCustomerId = project.EndCustomerId;
+            existingProject.StartDate = project.StartDate;
+            existingProject.EndDate = project.EndDate;
+            existingProject.Description = project.Description;
+            existingProject.WorkOrder = project.WorkOrder;
+            existingProject.RoleId = project.RoleId;
+            existingProject.SectorId = project.SectorId;
+            existingProject.JobCode = project.JobCode;
+            existingProject.UserId = project.UserId;
+            existingProject.Difficulty = project.Difficulty.ToString();
+            existingProject.Status = project.Status.ToString();
+            existingProject.Goals = project.Goals;
+            existingProject.Repository = project.Repository;
+            existingProject.GoalSolutions = project.GoalSolutions;
+            existingProject.SolutionsImpact = project.SolutionsImpact;
+            existingProject.BusinessUnitId = project.BusinessUnitId;
+            existingProject.Skills = project.Skills;
+            existingProject.Architectures = project.Architectures;
+            existingProject.WorkMethods = project.WorkMethods;
+            existingProject.ManagementTools = project.ManagementTools;
+            existingProject.SoftSkills = project.SoftSkills;
+
+            await dbContext.SaveChangesAsync();
+
+            return existingProject.Id;
+
         }
     }
 }
