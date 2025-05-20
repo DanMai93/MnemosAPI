@@ -24,6 +24,7 @@ namespace MnemosAPI.Data.Configurations
             entity.Property(e => e.Repository).IsRequired().HasMaxLength(1000);
             entity.Property(e => e.GoalSolutions).IsRequired().HasMaxLength(2000);
             entity.Property(e => e.SolutionsImpact).IsRequired().HasMaxLength(2000);
+            entity.Property(e => e.Description).IsRequired().HasMaxLength(2500);
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.CustomerId)
