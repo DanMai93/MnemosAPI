@@ -31,6 +31,10 @@ builder.Services.AddScoped<ISectorRepository, SectorRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IArchitectureRepository, ArchitectureRepository>();
+builder.Services.AddScoped<IWorkMethodRepository, WorkMethodRepository>();
+builder.Services.AddScoped<IManagementToolRepository, ManagementToolRepository>();
+builder.Services.AddScoped<ISoftSkillRepository, SoftSkillRepository>();
 
 builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
@@ -42,6 +46,10 @@ builder.Services.AddScoped<IScaleService, ScaleService>();
 builder.Services.AddScoped<ISectorService, SectorService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IArchitectureService, ArchitectureService>();
+builder.Services.AddScoped<IWorkMethodService, WorkMethodService>();
+builder.Services.AddScoped<IManagementToolService, ManagementToolService>();
+builder.Services.AddScoped<ISoftSkillService, SoftSkillService>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 

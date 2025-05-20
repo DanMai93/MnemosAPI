@@ -32,6 +32,14 @@ public partial class Project
 
     public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
 
+    public virtual ICollection<Architecture> Architectures { get; set; } = new List<Architecture>();
+
+    public virtual ICollection<WorkMethod> WorkMethods { get; set; } = new List<WorkMethod>();
+
+    public virtual ICollection<ManagementTool> ManagementTools { get; set; } = new List<ManagementTool>();
+
+    public virtual ICollection<SoftSkill> SoftSkills { get; set; } = new List<SoftSkill>();
+
     public string WorkOrder { get; set; }
 
     public string JobCode { get; set; }
@@ -45,6 +53,16 @@ public partial class Project
     public string Status { get; set; }
 
     public string Goals { get; set; }
+
+    public string Repository { get; set; }
+
+    public string GoalSolutions { get; set; }
+
+    public string SolutionsImpact { get; set; }
+
+    public int? BusinessUnitId { get; set; }
+
+    public virtual BusinessUnit BusinessUnit { get; set; }
 
     
 

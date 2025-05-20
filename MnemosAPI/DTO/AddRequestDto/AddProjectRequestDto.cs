@@ -25,6 +25,14 @@ namespace MnemosAPI.DTO.AddRequestDto
 
         public int[] Skills { get; set; }
 
+        public int[] Architectures { get; set; }
+
+        public int[] WorkMethods { get; set; }
+
+        public int[] ManagementTools { get; set; }
+
+        public int[] SoftSkills { get; set; }
+
         public string? JobCode { get; set; }
 
         public int UserId { get; set; }
@@ -34,6 +42,14 @@ namespace MnemosAPI.DTO.AddRequestDto
         public StatusesEnum Status { get; set; }
 
         public string? Goals { get; set; }
-        
+
+        public string Repository { get; set; }
+
+        public string GoalSolutions { get; set; }
+
+        public string SolutionsImpact { get; set; }
+
+        public int? BusinessUnitId { get; set; }
+
     }
 }

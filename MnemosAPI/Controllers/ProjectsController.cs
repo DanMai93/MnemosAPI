@@ -6,6 +6,7 @@ using MnemosAPI.DTO.FiltersDTO;
 using MnemosAPI.DTO.UpdateRequestDto;
 using MnemosAPI.Services;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MnemosAPI.Controllers
 {
@@ -36,7 +37,7 @@ namespace MnemosAPI.Controllers
             var result = await projectService.GetGroupedByCustomerAsync();
             if (result is null || result.Count() == 0)
             {
-                return NotFound("Nessun ruolo trovato");
+                return NotFound("Nessun progetto trovato");
             }
             return Ok(result);
         }
@@ -47,7 +48,7 @@ namespace MnemosAPI.Controllers
             var result = await projectService.GetGroupedBySectorAsync();
             if (result is null || result.Count() == 0)
             {
-                return NotFound("Nessun ruolo trovato");
+                return NotFound("Nessun progetto trovato");
             }
             return Ok(result);
             
@@ -59,7 +60,7 @@ namespace MnemosAPI.Controllers
             var result = await projectService.GetGroupedByRoleAsync();
             if(result is null || result.Count() == 0)
             {
-                return NotFound("Nessun ruolo trovato");
+                return NotFound("Nessun progetto trovato");
             }
             return Ok(result);
         }
@@ -70,7 +71,7 @@ namespace MnemosAPI.Controllers
             var result = await projectService.GetGroupedByEndCustomerAsync();
             if (result is null || result.Count() == 0)
             {
-                return NotFound("Nessun ruolo trovato");
+                return NotFound("Nessun progetto trovato");
             }
             return Ok(result); ;
         }
@@ -81,7 +82,7 @@ namespace MnemosAPI.Controllers
            var result = await projectService.GetGroupedByStartDateAsync();
             if (result is null || result.Count() == 0)
             {
-                return NotFound("Nessun ruolo trovato");
+                return NotFound("Nessun progetto trovato");
             }
             return Ok(result);
 
@@ -93,7 +94,7 @@ namespace MnemosAPI.Controllers
             var result = await projectService.GetLatestProjectsAsync(count);
             if (result is null || result.Count() == 0)
             {
-                return NotFound("Nessun ruolo trovato");
+                return NotFound("Nessun progetto trovato");
             }
             return Ok(result);
         }
@@ -104,7 +105,7 @@ namespace MnemosAPI.Controllers
             var result = await projectService.GetByInProgressStatusAsync();
             if (result is null || result.Count() == 0)
             {
-                return NotFound("Nessun ruolo trovato");
+                return NotFound("Nessun progetto trovato");
             }
             return Ok(result);
         }
@@ -153,8 +154,9 @@ namespace MnemosAPI.Controllers
 
         // DELETE: api/Projects/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteProject([FromRoute] int id)
+        public async Task<IActionResult> DeleteProject([FromRoute] int id)
         {
+            await projectService.DeleteProjectAsync(id);
             return Ok();
         }
     }

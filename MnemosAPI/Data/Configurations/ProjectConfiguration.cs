@@ -21,6 +21,10 @@ namespace MnemosAPI.Data.Configurations
             entity.Property(e => e.Title)
                 .IsRequired()
                 .HasMaxLength(50);
+            entity.Property(e => e.Repository).IsRequired().HasMaxLength(1000);
+            entity.Property(e => e.GoalSolutions).IsRequired().HasMaxLength(2000);
+            entity.Property(e => e.SolutionsImpact).IsRequired().HasMaxLength(2000);
+            entity.Property(e => e.Description).IsRequired().HasMaxLength(2500);
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.CustomerId)
@@ -45,12 +49,44 @@ namespace MnemosAPI.Data.Configurations
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Projects_Users");
 
+            entity.HasOne(d => d.BusinessUnit).WithMany(p => p.Projects)
+           .HasForeignKey(d => d.BusinessUnitId)
+           .HasConstraintName("FK_Projects_BusinessUnits");
+
             entity.HasMany(p => p.Skills)
                 .WithMany(s => s.Projects)
                 .UsingEntity<Dictionary<string, object>>(
                 "ProjectSkill",
                 j => j.HasOne<Skill>().WithMany(),
                 j => j.HasOne<Project>().WithMany());
+
+            entity.HasMany(p => p.Architectures)
+              .WithMany(s => s.Projects)
+              .UsingEntity<Dictionary<string, object>>(
+              "ProjectArchitecture",
+              j => j.HasOne<Architecture>().WithMany(),
+              j => j.HasOne<Project>().WithMany());
+
+            entity.HasMany(p => p.WorkMethods)
+              .WithMany(s => s.Projects)
+              .UsingEntity<Dictionary<string, object>>(
+              "ProjectWorkMethod",
+              j => j.HasOne<WorkMethod>().WithMany(),
+              j => j.HasOne<Project>().WithMany());
+
+            entity.HasMany(p => p.ManagementTools)
+              .WithMany(s => s.Projects)
+              .UsingEntity<Dictionary<string, object>>(
+              "ProjectManagementTool",
+              j => j.HasOne<ManagementTool>().WithMany(),
+              j => j.HasOne<Project>().WithMany());
+
+            entity.HasMany(p => p.SoftSkills)
+              .WithMany(s => s.Projects)
+              .UsingEntity<Dictionary<string, object>>(
+              "ProjectSoftSkill",
+              j => j.HasOne<SoftSkill>().WithMany(),
+              j => j.HasOne<Project>().WithMany());
 
             OnConfigurePartial(entity);
         }

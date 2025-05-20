@@ -8,11 +8,7 @@ namespace MnemosAPI.DTO
 
         public string? Title { get; set; }
 
-        public int CustomerId { get; set; }
-
         public CustomerDto Customer { get; set; }
-
-        public int EndCustomerId { get; set; }
 
         public EndCustomerDto EndCustomer { get; set; }
 
@@ -26,15 +22,17 @@ namespace MnemosAPI.DTO
 
         public List<SkillDto> Skills { get; set; }
 
-        public int SkillId { get; set; }
+        public List<ArchitectureDto> Architectures { get; set; }
+
+        public List<ManagementToolDto> ManagementTools { get; set; }
+
+        public List<WorkMethodDto> WorkMethods { get; set; }
+
+        public List<SoftSkillDto> SoftSkills { get; set; }
 
         public RoleDto? Role { get; set; }
 
-        public int RoleId { get; set; }
-
         public SectorDto? Sector { get; set; }
-
-        public int SectorId { get; set; }
 
         public string? JobCode { get; set; }
 
@@ -45,8 +43,16 @@ namespace MnemosAPI.DTO
         public StatusesEnum Status { get; set; }
 
         public string? Goals { get; set; }
-      
-        
+
+        public string Repository { get; set; }
+
+        public string GoalSolutions { get; set; }
+
+        public string SolutionsImpact { get; set; }
+
+        public BusinessUnitDto? BusinessUnit { get; set; }
+
+
 
     }
 }
