@@ -258,10 +258,7 @@ namespace MnemosAPI.Services
 
         public async Task<IEnumerable<ProjectDto>> GetLatestProjectsAsync(int count)
         {
-            var latestProjects = (await _projectRepository.GetLatestProjectsAsync(count))
-                .OrderByDescending(p => p.StartDate)
-                .Take(count)
-                .ToList();
+            var latestProjects = await _projectRepository.GetLatestProjectsAsync(count);
 
             var latestProjectsDto = new List<ProjectDto>();
 
@@ -678,6 +675,47 @@ namespace MnemosAPI.Services
             }
 
             return projectListDto;
+        }
+
+         public async Task<IEnumerable<ProjectDto>> GetByInputStringAsync(string inputString)
+        {
+            var projects = await _projectRepository.GetByInputStringAsync(inputString);
+
+            var projectsDto = new List<ProjectDto>();
+
+            foreach (var project in projects)
+            {
+                projectsDto.Add(new ProjectDto
+                {
+                    Id = project.Id,
+                    Title = project.Title,
+                    Customer = _mapper.Map<CustomerDto>(project.Customer),
+                    EndCustomer = _mapper.Map<EndCustomerDto>(project.EndCustomer),
+                    StartDate = project.StartDate,
+                    EndDate = project.EndDate,
+                    Description = project.Description,
+                    WorkOrder = project.WorkOrder,
+                    Role = _mapper.Map<RoleDto>(project.Role),
+                    Sector = _mapper.Map<SectorDto>(project.Sector),
+                    Skills = _mapper.Map<List<SkillDto>>(project.Skills),
+                    JobCode = project.JobCode,
+                    User = _mapper.Map<UserDto>(project.User),
+                    Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
+                    Status = Enum.Parse<StatusesEnum>(project.Status),
+                    Goals = project.Goals,
+                    Repository = project.Repository,
+                    GoalSolutions = project.GoalSolutions,
+                    SolutionsImpact = project.SolutionsImpact,
+                    BusinessUnit = _mapper.Map<BusinessUnitDto>(project.BusinessUnit),
+                    Architectures = _mapper.Map<List<ArchitectureDto>>(project.Architectures),
+                    WorkMethods = _mapper.Map<List<WorkMethodDto>>(project.WorkMethods),
+                    ManagementTools = _mapper.Map<List<ManagementToolDto>>(project.ManagementTools),
+                    SoftSkills = _mapper.Map<List<SoftSkillDto>>(project.SoftSkills)
+
+                });
+            }
+
+            return projectsDto;
         }
     }
 }

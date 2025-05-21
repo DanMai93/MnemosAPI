@@ -19,12 +19,11 @@ namespace MnemosAPI.Data.Configurations
             entity.Property(e => e.Goals).IsUnicode(false);
             entity.Property(e => e.JobCode).HasMaxLength(30);
             entity.Property(e => e.Title)
-                .IsRequired()
                 .HasMaxLength(50);
-            entity.Property(e => e.Repository).IsRequired().HasMaxLength(1000);
-            entity.Property(e => e.GoalSolutions).IsRequired().HasMaxLength(2000);
-            entity.Property(e => e.SolutionsImpact).IsRequired().HasMaxLength(2000);
-            entity.Property(e => e.Description).IsRequired().HasMaxLength(2500);
+            entity.Property(e => e.Repository).HasMaxLength(1000);
+            entity.Property(e => e.GoalSolutions).HasMaxLength(2000);
+            entity.Property(e => e.SolutionsImpact).HasMaxLength(2000);
+            entity.Property(e => e.Description).HasMaxLength(2500);
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.CustomerId)

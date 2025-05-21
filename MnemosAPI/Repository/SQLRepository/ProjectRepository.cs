@@ -43,7 +43,8 @@ namespace MnemosAPI.Repository.SQLRepository
                 .OrderByDescending(p => p.StartDate)
                 .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
                 .Include(p => p.BusinessUnit).Include(p => p.Architectures).Include(p => p.WorkMethods).Include(p => p.ManagementTools).Include(p => p.SoftSkills)
-                .Take(count) 
+                .Take(count)
+                .OrderByDescending(p => p.StartDate)
                 .ToListAsync();
 
             return latestProjects;
@@ -154,6 +155,18 @@ namespace MnemosAPI.Repository.SQLRepository
 
             return existingProject.Id;
 
+        }
+
+        public async Task<List<Project>> GetByInputStringAsync(string inputString)
+        {
+            var projects = await dbContext.Projects
+                .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
+                .Include(p => p.BusinessUnit).Include(p => p.Architectures).Include(p => p.WorkMethods).Include(p => p.ManagementTools).Include(p => p.SoftSkills)
+                .Where(p => p.Title.ToLower().Contains(inputString.ToLower()))
+                .OrderBy(x => x.Id)
+                .ToListAsync();
+
+            return projects;
         }
     }
 }

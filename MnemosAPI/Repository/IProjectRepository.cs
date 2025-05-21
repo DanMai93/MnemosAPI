@@ -19,7 +19,7 @@ namespace MnemosAPI.Repository
         Task<Project> GetByIdWithForeignKeysAsync(int id);
         Task<List<Project>> GetByInProgressStatusAsync();
         Task<int> UpdateProjectAsync(int id, Project project);
-
+        Task<List<Project>> GetByInputStringAsync(string inputString);
     }
 
 }
