@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MnemosAPI.Data;
 
@@ -11,9 +12,11 @@ using MnemosAPI.Data;
 namespace MnemosAPI.Migrations
 {
     [DbContext(typeof(MnemosDbContext))]
-    partial class MnemosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250521150838_campi project non obbligatori test2")]
+    partial class campiprojectnonobbligatoritest2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,7 +178,7 @@ namespace MnemosAPI.Migrations
                     b.Property<int?>("BusinessUnitId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CustomerId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -187,7 +190,7 @@ namespace MnemosAPI.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(12)");
 
-                    b.Property<int?>("EndCustomerId")
+                    b.Property<int>("EndCustomerId")
                         .HasColumnType("int");
 
                     b.Property<DateOnly?>("EndDate")
@@ -219,7 +222,7 @@ namespace MnemosAPI.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<DateOnly?>("StartDate")
+                    b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
 
                     b.Property<string>("Status")
@@ -518,11 +521,13 @@ namespace MnemosAPI.Migrations
                     b.HasOne("MnemosAPI.Models.Customer", "Customer")
                         .WithMany("Projects")
                         .HasForeignKey("CustomerId")
+                        .IsRequired()
                         .HasConstraintName("FK_Projects_Customers");
 
                     b.HasOne("MnemosAPI.Models.EndCustomer", "EndCustomer")
                         .WithMany("Projects")
                         .HasForeignKey("EndCustomerId")
+                        .IsRequired()
                         .HasConstraintName("FK_Projects_EndCustomers");
 
                     b.HasOne("MnemosAPI.Models.Role", "Role")

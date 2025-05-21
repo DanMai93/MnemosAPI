@@ -8,15 +8,15 @@ public partial class Project
 
     public string Title { get; set; }
 
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
 
     public virtual Customer Customer { get; set; }
 
-    public int EndCustomerId { get; set; }
+    public int? EndCustomerId { get; set; }
 
     public virtual EndCustomer EndCustomer { get; set; }
 
-    public DateOnly StartDate { get; set; }
+    public DateOnly? StartDate { get; set; }
 
     public DateOnly? EndDate { get; set; }
 
@@ -44,7 +44,7 @@ public partial class Project
 
     public string JobCode { get; set; }
 
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     public virtual User User { get; set; }
 

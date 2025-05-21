@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MnemosAPI.Data;
 
@@ -11,9 +12,11 @@ using MnemosAPI.Data;
 namespace MnemosAPI.Migrations
 {
     [DbContext(typeof(MnemosDbContext))]
-    partial class MnemosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250521152330_campi foreign key di project non obbligatori")]
+    partial class campiforeignkeydiprojectnonobbligatori
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,7 +222,7 @@ namespace MnemosAPI.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<DateOnly?>("StartDate")
+                    b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
 
                     b.Property<string>("Status")

@@ -96,7 +96,7 @@ namespace MnemosAPI.Repository.SQLRepository
             return groupedByEndCustomer;
         }
 
-        public async Task<List<IGrouping<DateOnly, Project>>> GetGroupedByStartDateAsync()
+        public async Task<List<IGrouping<DateOnly?, Project>>> GetGroupedByStartDateAsync()
         {
             var groupedByStartDate = await dbContext.Projects
                 .Include(p => p.Sector).Include(p => p.Role).Include(p => p.User).Include(p => p.Customer).Include(s => s.Skills).Include(p => p.EndCustomer)
