@@ -110,6 +110,17 @@ namespace MnemosAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet("BySearchString")]
+        public async Task<ActionResult<IEnumerable<ProjectDto>>> GetByInputString([FromQuery] string searchString)
+        {
+            var result = await projectService.GetByInputStringAsync(searchString);
+            if (result is null || result.Count() == 0)
+            {
+                return NotFound("Nessun progetto trovato");
+            }
+            return Ok(result);
+        }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProjectDto>> GetProjectByIdAsync([FromRoute] int id)

@@ -30,6 +30,8 @@ namespace MnemosAPI.Services
         Task<ProjectDto> GetProjectAsync(int projectId);
 
         Task<ProjectDto> UpdateProjectAsync(int projectId, UpdateProjectRequestDto updateProjectRequestDto);
+
+        Task<IEnumerable<ProjectDto>> GetByInputStringAsync(string inputString);
         
     }   
 }
