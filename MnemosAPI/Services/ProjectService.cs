@@ -63,73 +63,88 @@ namespace MnemosAPI.Services
                 BusinessUnitId = addProjectRequestDto.BusinessUnitId
             };
 
-            foreach (var skillId in addProjectRequestDto.Skills)
+            if(addProjectRequestDto.Skills != null)
             {
-                // Retrieve the full Skill entity from the database
-                var skill = await _skillRepository.GetByIdAsync(skillId);
-                if (skill != null)
+                foreach (var skillId in addProjectRequestDto.Skills)
                 {
-                    project.Skills.Add(skill);
-                }
-                else
-                {
-                    throw new ArgumentException("Skill non trovata con id " + skillId);
+                    // Retrieve the full Skill entity from the database
+                    var skill = await _skillRepository.GetByIdAsync(skillId);
+                    if (skill != null)
+                    {
+                        project.Skills.Add(skill);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Skill non trovata con id " + skillId);
+                    }
                 }
             }
 
-            foreach (var architectureId in addProjectRequestDto.Architectures)
+            if(addProjectRequestDto.Architectures != null)
             {
-           
-                var architecture = await _architectureRepository.GetByIdAsync(architectureId);
-                if (architecture != null)
+                foreach (var architectureId in addProjectRequestDto.Architectures)
                 {
-                    project.Architectures.Add(architecture);
-                }
-                else
-                {
-                    throw new ArgumentException("Architecture non trovata con id " + architectureId);
-                }
-            }
 
-            foreach (var workMethodId in addProjectRequestDto.WorkMethods)
-            {
-              
-                var workMethod = await _workMethodRepository.GetByIdAsync(workMethodId);
-                if (workMethod != null)
-                {
-                    project.WorkMethods.Add(workMethod);
-                }
-                else
-                {
-                    throw new ArgumentException("Work method non trovato con id " + workMethodId);
+                    var architecture = await _architectureRepository.GetByIdAsync(architectureId);
+                    if (architecture != null)
+                    {
+                        project.Architectures.Add(architecture);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Architecture non trovata con id " + architectureId);
+                    }
                 }
             }
 
 
-            foreach (var managementToolId in addProjectRequestDto.ManagementTools)
+            if(addProjectRequestDto.WorkMethods != null)
             {
-
-                var managementTool = await _managementToolRepository.GetByIdAsync(managementToolId);
-                if (managementTool != null)
+                foreach (var workMethodId in addProjectRequestDto.WorkMethods)
                 {
-                    project.ManagementTools.Add(managementTool);
-                }
-                else
-                {
-                    throw new ArgumentException("Management tool non trovato con id " + managementToolId);
+                    var workMethod = await _workMethodRepository.GetByIdAsync(workMethodId);
+                    if (workMethod != null)
+                    {
+                        project.WorkMethods.Add(workMethod);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Work method non trovato con id " + workMethodId);
+                    }
                 }
             }
-
-            foreach (var softSkillId in addProjectRequestDto.SoftSkills)
+            
+            if(addProjectRequestDto.ManagementTools != null)
             {
+                foreach (var managementToolId in addProjectRequestDto.ManagementTools)
+                {
 
-                var softSkill = await _softSkillRepository.GetByIdAsync(softSkillId);
-                if (softSkill != null)
+                    var managementTool = await _managementToolRepository.GetByIdAsync(managementToolId);
+                    if (managementTool != null)
+                    {
+                        project.ManagementTools.Add(managementTool);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Management tool non trovato con id " + managementToolId);
+                    }
+                }
+            }
+            
+            if(addProjectRequestDto.SoftSkills != null)
+            {
+                foreach (var softSkillId in addProjectRequestDto.SoftSkills)
                 {
-                    project.SoftSkills.Add(softSkill);
-                } else
-                {
-                    throw new ArgumentException("Soft skill non trovata con id " + softSkillId);
+
+                    var softSkill = await _softSkillRepository.GetByIdAsync(softSkillId);
+                    if (softSkill != null)
+                    {
+                        project.SoftSkills.Add(softSkill);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Soft skill non trovata con id " + softSkillId);
+                    }
                 }
             }
 
