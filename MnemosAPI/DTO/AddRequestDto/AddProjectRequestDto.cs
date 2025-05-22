@@ -5,9 +5,9 @@ namespace MnemosAPI.DTO.AddRequestDto
 {
     public class AddProjectRequestDto
     {
-        public string? Title { get; set; }
+        public string Title { get; set; }
         
-        public int? CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         public int? EndCustomerId { get; set; }
 
