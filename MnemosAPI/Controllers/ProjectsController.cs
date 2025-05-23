@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MnemosAPI.DTO;
 using MnemosAPI.DTO.AddRequestDto;
@@ -135,13 +136,13 @@ namespace MnemosAPI.Controllers
             return Ok(project);
         }
 
-        // PUT: api/Projects/5
+        // PATCH: api/Projects/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<ActionResult<ProjectDto>> UpdateProject([FromRoute] int id, [FromBody] UpdateProjectRequestDto updateProjectRequestDto)
+        [HttpPatch("{id}")]
+        public async Task<ActionResult<ProjectDto>> UpdateProject([FromRoute] int id, [FromBody] JsonPatchDocument<UpdateProjectRequestDto> updateProjectRequestDto)
         {
 
-            var projectDto = await projectService.UpdateProjectAsync(id, updateProjectRequestDto);
+            var projectDto = await projectService.UpdateProjectAsync(id, updateProjectRequestDto, ModelState);
 
             if (projectDto == null)
             {

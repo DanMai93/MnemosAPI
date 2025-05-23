@@ -13,6 +13,10 @@ using MnemosAPI.Models;
 using MnemosAPI.Repository;
 using MnemosAPI.Utilities;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MnemosAPI.Services
 {
@@ -213,8 +217,8 @@ namespace MnemosAPI.Services
                 Skills = _mapper.Map<List<SkillDto>>(project.Skills),
                 JobCode = project.JobCode,
                 User = _mapper.Map<UserDto>(project.User),
-                Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
-                Status = Enum.Parse<StatusesEnum>(project.Status),
+                Difficulty = project.Difficulty != "" ?  Enum.Parse<DifficultiesEnum>(project.Difficulty) : null,
+                Status = project.Status != "" ?  Enum.Parse<StatusesEnum>(project.Status) : null,
                 Goals = project.Goals,
                 Repository = project.Repository,
                 GoalSolutions = project.GoalSolutions,
@@ -254,8 +258,8 @@ namespace MnemosAPI.Services
                 Skills = _mapper.Map<List<SkillDto>>(project.Skills),
                 JobCode = project.JobCode,
                 User = _mapper.Map<UserDto>(project.User),
-                Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
-                Status = Enum.Parse<StatusesEnum>(project.Status),
+                Difficulty = project.Difficulty != "" ? Enum.Parse<DifficultiesEnum>(project.Difficulty) : null,
+                Status = project.Status != "" ? Enum.Parse<StatusesEnum>(project.Status) : null,
                 Goals = project.Goals,
                 Repository = project.Repository,
                 GoalSolutions = project.GoalSolutions,
@@ -294,8 +298,8 @@ namespace MnemosAPI.Services
                     Skills = _mapper.Map<List<SkillDto>>(project.Skills),
                     JobCode = project.JobCode,
                     User = _mapper.Map<UserDto>(project.User),
-                    Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
-                    Status = Enum.Parse<StatusesEnum>(project.Status),
+                    Difficulty = project.Difficulty != "" ? Enum.Parse<DifficultiesEnum>(project.Difficulty) : null,
+                    Status = project.Status != "" ? Enum.Parse<StatusesEnum>(project.Status) : null,
                     Goals = project.Goals,
                     Repository = project.Repository,
                     GoalSolutions = project.GoalSolutions,
@@ -338,8 +342,8 @@ namespace MnemosAPI.Services
                         Skills = _mapper.Map<List<SkillDto>>(projectFilter.Skills),
                         JobCode = projectFilter.JobCode,
                         User = _mapper.Map<UserDto>(projectFilter.User),
-                        Difficulty = Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty),
-                        Status = Enum.Parse<StatusesEnum>(projectFilter.Status),
+                        Difficulty = projectFilter.Difficulty != "" ? Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty) : null,
+                        Status = projectFilter.Status != "" ? Enum.Parse<StatusesEnum>(projectFilter.Status) : null,
                         Goals = projectFilter.Goals,
                         Repository = projectFilter.Repository,
                         GoalSolutions = projectFilter.GoalSolutions,
@@ -381,8 +385,8 @@ namespace MnemosAPI.Services
                         Skills = _mapper.Map<List<SkillDto>>(projectFilter.Skills),
                         JobCode = projectFilter.JobCode,
                         User = _mapper.Map<UserDto>(projectFilter.User),
-                        Difficulty = Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty),
-                        Status = Enum.Parse<StatusesEnum>(projectFilter.Status),
+                        Difficulty = projectFilter.Difficulty != "" ? Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty) : null,
+                        Status = projectFilter.Status != "" ? Enum.Parse<StatusesEnum>(projectFilter.Status) : null,
                         Goals = projectFilter.Goals,
                         Repository = projectFilter.Repository,
                         GoalSolutions = projectFilter.GoalSolutions,
@@ -424,8 +428,8 @@ namespace MnemosAPI.Services
                         Skills = _mapper.Map<List<SkillDto>>(projectFilter.Skills),
                         JobCode = projectFilter.JobCode,
                         User = _mapper.Map<UserDto>(projectFilter.User),
-                        Difficulty = Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty),
-                        Status = Enum.Parse<StatusesEnum>(projectFilter.Status),
+                        Difficulty = projectFilter.Difficulty != "" ? Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty) : null,
+                        Status = projectFilter.Status != "" ? Enum.Parse<StatusesEnum>(projectFilter.Status) : null,
                         Goals = projectFilter.Goals,
                         Repository = projectFilter.Repository,
                         GoalSolutions = projectFilter.GoalSolutions,
@@ -470,8 +474,8 @@ namespace MnemosAPI.Services
                         Skills = _mapper.Map<List<SkillDto>>(projectFilter.Skills),
                         JobCode = projectFilter.JobCode,
                         User = _mapper.Map<UserDto>(projectFilter.User),
-                        Difficulty = Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty),
-                        Status = Enum.Parse<StatusesEnum>(projectFilter.Status),
+                        Difficulty = projectFilter.Difficulty != "" ? Enum.Parse<DifficultiesEnum>(projectFilter.Difficulty) : null,
+                        Status = projectFilter.Status != "" ? Enum.Parse<StatusesEnum>(projectFilter.Status) : null,
                         Goals = projectFilter.Goals,
                         Repository = projectFilter.Repository,
                         GoalSolutions = projectFilter.GoalSolutions,
@@ -510,8 +514,8 @@ namespace MnemosAPI.Services
                     Skills = _mapper.Map<List<SkillDto>>(project.Skills),
                     JobCode = project.JobCode,
                     User = _mapper.Map<UserDto>(project.User),
-                    Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
-                    Status = Enum.Parse<StatusesEnum>(project.Status),
+                    Difficulty = project.Difficulty != "" ? Enum.Parse<DifficultiesEnum>(project.Difficulty) : null,
+                    Status = project.Status != "" ? Enum.Parse<StatusesEnum>(project.Status) : null,
                     Goals = project.Goals,
                     Repository = project.Repository,
                     GoalSolutions = project.GoalSolutions,
@@ -526,99 +530,12 @@ namespace MnemosAPI.Services
 
             return result;
         }
-
-
-        public async Task<ProjectDto> UpdateProjectAsync(int projectId, UpdateProjectRequestDto updateProjectRequestDto)
+        public async Task<ProjectDto> UpdateProjectAsync(int projectId, JsonPatchDocument<UpdateProjectRequestDto> updateProjectRequestDto, ModelStateDictionary ModelState)
         {
 
-            var existingProject = await _projectRepository.GetByIdWithForeignKeysAsync(projectId);
+            var updatedProjectId = await _projectRepository.UpdateProjectAsync(projectId, updateProjectRequestDto, ModelState);
 
-            if (existingProject == null) 
-            {
-                throw new ArgumentException("Progetto non trovato con id " + projectId);
-            }
-
-            var project = new Project
-            {
-                Title = updateProjectRequestDto.Title,
-                CustomerId = updateProjectRequestDto.CustomerId,
-                EndCustomerId = updateProjectRequestDto.EndCustomerId,
-                StartDate = updateProjectRequestDto.StartDate,
-                EndDate = updateProjectRequestDto.EndDate,
-                Description = updateProjectRequestDto.Description,
-                WorkOrder = updateProjectRequestDto.WorkOrder,
-                RoleId = updateProjectRequestDto.RoleId,
-                SectorId = updateProjectRequestDto.SectorId,
-                JobCode = updateProjectRequestDto.JobCode,
-                UserId = updateProjectRequestDto.UserId,
-                Difficulty = updateProjectRequestDto.Difficulty.ToString(),
-                Status = updateProjectRequestDto.Status.ToString(),
-                Goals = updateProjectRequestDto.Goals,
-                Repository = updateProjectRequestDto.Repository,
-                GoalSolutions = updateProjectRequestDto.GoalSolutions,
-                SolutionsImpact = updateProjectRequestDto.SolutionsImpact,
-                BusinessUnitId = updateProjectRequestDto.BusinessUnitId
-            };
-
-            foreach (var skillId in updateProjectRequestDto.Skills) 
-            {
-                var skill = await _skillRepository.GetByIdAsync(skillId);
-
-                if (skill == null)
-                {
-                    throw new ArgumentException("Skill non trovata con id " + skillId);                
-                }
-                  project.Skills.Add(skill);       
-            }
-
-            foreach (var architectureId in updateProjectRequestDto.Architectures)
-            {
-                var architecture = await _architectureRepository.GetByIdAsync(architectureId);
-
-                if (architecture == null)
-                {
-                    throw new ArgumentException("Architettura non trovata con id " + architectureId);
-                }
-
-                project.Architectures.Add(architecture);
-            }
-
-            foreach (var workMethodId in updateProjectRequestDto.WorkMethods)
-            {
-                var workMethod = await _workMethodRepository.GetByIdAsync(workMethodId);
-
-                if (workMethod == null)
-                {
-                    throw new ArgumentException("WorkMethod non trovato con id " + workMethod);
-                }
-                project.WorkMethods.Add(workMethod);
-            }
-
-            foreach (var managementToolId in updateProjectRequestDto.ManagementTools)
-            {
-                var managementTool = await _managementToolRepository.GetByIdAsync(managementToolId);
-
-                if (managementTool == null)
-                {
-                    throw new ArgumentException("ManagementTool non trovato con id " + managementToolId);
-                }
-                project.ManagementTools.Add(managementTool);
-            }
-
-            foreach (var softSkillId in updateProjectRequestDto.SoftSkills)
-            {
-                var softSkill = await _softSkillRepository.GetByIdAsync(softSkillId);
-
-                if (softSkill == null)
-                {
-                    throw new ArgumentException("Soft skill non trovata con id " + softSkillId);
-                }
-                project.SoftSkills.Add(softSkill);
-            }
-
-            var projectToUpdateId = await _projectRepository.UpdateProjectAsync(projectId, project);
-
-            var updatedProject = await _projectRepository.GetByIdWithForeignKeysAsync(projectToUpdateId);
+            var updatedProject = await _projectRepository.GetByIdWithForeignKeysAsync(updatedProjectId);
 
             var projectDto = new ProjectDto()
             {
@@ -635,8 +552,8 @@ namespace MnemosAPI.Services
                 Skills = _mapper.Map<List<SkillDto>>(updatedProject.Skills),
                 JobCode = updatedProject.JobCode,
                 User = _mapper.Map<UserDto>(updatedProject.User),
-                Difficulty = Enum.Parse<DifficultiesEnum>(updatedProject.Difficulty),
-                Status = Enum.Parse<StatusesEnum>(updatedProject.Status),
+                Difficulty = updatedProject.Difficulty != "" ? Enum.Parse<DifficultiesEnum>(updatedProject.Difficulty) : null,
+                Status = updatedProject.Status != "" ? Enum.Parse<StatusesEnum>(updatedProject.Status) : null,
                 Goals = updatedProject.Goals,
                 Repository = updatedProject.Repository,
                 GoalSolutions = updatedProject.GoalSolutions,
@@ -675,8 +592,8 @@ namespace MnemosAPI.Services
                     Skills = _mapper.Map<List<SkillDto>>(project.Skills),
                     JobCode = project.JobCode,
                     User = _mapper.Map<UserDto>(project.User),
-                    Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
-                    Status = Enum.Parse<StatusesEnum>(project.Status),
+                    Difficulty = project.Difficulty != "" ? Enum.Parse<DifficultiesEnum>(project.Difficulty) : null,
+                    Status = project.Status != "" ? Enum.Parse<StatusesEnum>(project.Status) : null,
                     Goals = project.Goals,
                     Repository = project.Repository,
                     GoalSolutions = project.GoalSolutions,
@@ -715,8 +632,8 @@ namespace MnemosAPI.Services
                     Skills = _mapper.Map<List<SkillDto>>(project.Skills),
                     JobCode = project.JobCode,
                     User = _mapper.Map<UserDto>(project.User),
-                    Difficulty = Enum.Parse<DifficultiesEnum>(project.Difficulty),
-                    Status = Enum.Parse<StatusesEnum>(project.Status),
+                    Difficulty = project.Difficulty != "" ? Enum.Parse<DifficultiesEnum>(project.Difficulty) : null,
+                    Status = project.Status != "" ? Enum.Parse<StatusesEnum>(project.Status) : null,
                     Goals = project.Goals,
                     Repository = project.Repository,
                     GoalSolutions = project.GoalSolutions,

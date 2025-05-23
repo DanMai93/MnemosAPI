@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MnemosAPI.DTO;
 using MnemosAPI.DTO.FiltersDTO;
 using MnemosAPI.DTO.UpdateRequestDto;
@@ -18,7 +20,7 @@ namespace MnemosAPI.Repository
         Task<List<Project>> GetAllWithForeignKeysAsync();
         Task<Project> GetByIdWithForeignKeysAsync(int id);
         Task<List<Project>> GetByInProgressStatusAsync();
-        Task<int> UpdateProjectAsync(int id, Project project);
+        Task<int> UpdateProjectAsync(int projectId, JsonPatchDocument<UpdateProjectRequestDto> updateProjectRequestDto, ModelStateDictionary ModelState);
         Task<List<Project>> GetByInputStringAsync(string inputString);
     }
 

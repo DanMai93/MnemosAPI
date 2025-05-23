@@ -8,6 +8,8 @@ using MnemosAPI.Utilities;
 using NuGet.Protocol;
 using MnemosAPI.Services;
 using MnemosAPI.DTO.UpdateRequestDto;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace MnemosAPI.Repository.SQLRepository
 {
@@ -118,44 +120,77 @@ namespace MnemosAPI.Repository.SQLRepository
             return projectsInProgress;
         }
 
-        public async Task<int> UpdateProjectAsync(int id, Project project)
+        public async Task<int> UpdateProjectAsync( int projectId, JsonPatchDocument<UpdateProjectRequestDto> patchDoc, ModelStateDictionary modelState)
         {
-            var existingProject = await dbContext.Projects.FirstOrDefaultAsync(x => x.Id == id);
+            var existingProject = await dbContext.Projects.FirstOrDefaultAsync(x => x.Id == projectId);
+            if (existingProject == null)
+                throw new ArgumentException("Progetto non trovato");
 
-            if(existingProject == null)
+            // Step 1: Map entity to DTO
+            var projectDto = new UpdateProjectRequestDto
             {
-                throw new ArgumentException("Progetto non trovato" );
-            }
+                Title = existingProject.Title,
+                CustomerId = (int)existingProject.CustomerId,
+                EndCustomerId = existingProject.EndCustomerId,
+                StartDate = existingProject.StartDate,
+                EndDate = existingProject.EndDate,
+                Description = existingProject.Description,
+                WorkOrder = existingProject.WorkOrder,
+                RoleId = existingProject.RoleId,
+                SectorId = existingProject.SectorId,
+                JobCode = existingProject.JobCode,
+                UserId = existingProject.UserId,
+                Difficulty = existingProject.Difficulty != "" ? Enum.Parse<DifficultiesEnum>(existingProject.Difficulty) : null,
+                Status = existingProject.Status != "" ? Enum.Parse<StatusesEnum>(existingProject.Status) : null,
+                Goals = existingProject.Goals,
+                Repository = existingProject.Repository,
+                GoalSolutions = existingProject.GoalSolutions,
+                SolutionsImpact = existingProject.SolutionsImpact,
+                BusinessUnitId = existingProject.BusinessUnitId,
+                Skills = existingProject.Skills.Select(x => x.Id).ToArray(),
+                Architectures = existingProject.Architectures.Select(x => x.Id).ToArray(),
+                WorkMethods = existingProject.WorkMethods.Select(x => x.Id).ToArray(),
+                ManagementTools = existingProject.ManagementTools.Select(x => x.Id).ToArray(),
+                SoftSkills = existingProject.SoftSkills.Select(x => x.Id).ToArray()
+            };
 
-            existingProject.Title = project.Title;
-            existingProject.CustomerId = project.CustomerId;
-            existingProject.EndCustomerId = project.EndCustomerId;
-            existingProject.StartDate = project.StartDate;
-            existingProject.EndDate = project.EndDate;
-            existingProject.Description = project.Description;
-            existingProject.WorkOrder = project.WorkOrder;
-            existingProject.RoleId = project.RoleId;
-            existingProject.SectorId = project.SectorId;
-            existingProject.JobCode = project.JobCode;
-            existingProject.UserId = project.UserId;
-            existingProject.Difficulty = project.Difficulty.ToString();
-            existingProject.Status = project.Status.ToString();
-            existingProject.Goals = project.Goals;
-            existingProject.Repository = project.Repository;
-            existingProject.GoalSolutions = project.GoalSolutions;
-            existingProject.SolutionsImpact = project.SolutionsImpact;
-            existingProject.BusinessUnitId = project.BusinessUnitId;
-            existingProject.Skills = project.Skills;
-            existingProject.Architectures = project.Architectures;
-            existingProject.WorkMethods = project.WorkMethods;
-            existingProject.ManagementTools = project.ManagementTools;
-            existingProject.SoftSkills = project.SoftSkills;
+            
+            patchDoc.ApplyTo(projectDto, modelState);
+            if (!modelState.IsValid)
+                throw new InvalidOperationException("Model state invalid");
+
+            //  Map DTO back to entity
+            existingProject.Title = projectDto.Title;
+            existingProject.CustomerId = projectDto.CustomerId;
+            existingProject.EndCustomerId = projectDto.EndCustomerId;
+            existingProject.StartDate = projectDto.StartDate;
+            existingProject.EndDate = projectDto.EndDate;
+            existingProject.Description = projectDto.Description;
+            existingProject.WorkOrder = projectDto.WorkOrder;
+            existingProject.RoleId = projectDto.RoleId;
+            existingProject.SectorId = projectDto.SectorId;
+            existingProject.JobCode = projectDto.JobCode;
+            existingProject.UserId = projectDto.UserId;
+            existingProject.Difficulty = projectDto.Difficulty?.ToString();
+            existingProject.Status = projectDto.Status?.ToString();
+            existingProject.Goals = projectDto.Goals;
+            existingProject.Repository = projectDto.Repository;
+            existingProject.GoalSolutions = projectDto.GoalSolutions;
+            existingProject.SolutionsImpact = projectDto.SolutionsImpact;
+            existingProject.BusinessUnitId = projectDto.BusinessUnitId;
+
+            // If you are modifying navigation collections, you need to manage them explicitly:
+            existingProject.Skills = dbContext.Skills.Where(s => projectDto.Skills.Contains(s.Id)).ToList();
+            existingProject.Architectures = dbContext.Architectures.Where(a => projectDto.Architectures.Contains(a.Id)).ToList();
+            existingProject.WorkMethods = dbContext.WorkMethods.Where(w => projectDto.WorkMethods.Contains(w.Id)).ToList();
+            existingProject.ManagementTools = dbContext.ManagementTools.Where(m => projectDto.ManagementTools.Contains(m.Id)).ToList();
+            existingProject.SoftSkills = dbContext.SoftSkills.Where(s => projectDto.SoftSkills.Contains(s.Id)).ToList();
 
             await dbContext.SaveChangesAsync();
 
             return existingProject.Id;
-
         }
+
 
         public async Task<List<Project>> GetByInputStringAsync(string inputString)
         {

@@ -28,6 +28,7 @@ namespace MnemosAPI.Mappings
             CreateMap<AddProjectRequestDto, Project>().ReverseMap();
             CreateMap<UpdateProjectRequestDto, ProjectDto>().ReverseMap();
             CreateMap<Project, ProjectFilterDto>().ReverseMap();
+            CreateMap<UpdateProjectRequestDto, Project>().ReverseMap();
 
             CreateMap<Role, RoleDto>().ReverseMap();
             CreateMap<RoleGroupDto, Role>().ReverseMap();

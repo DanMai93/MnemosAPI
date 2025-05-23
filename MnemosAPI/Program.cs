@@ -53,6 +53,10 @@ builder.Services.AddScoped<ISoftSkillService, SoftSkillService>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
+builder.Services
+    .AddControllers()
+    .AddNewtonsoftJson();
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
